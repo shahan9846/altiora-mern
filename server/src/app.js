@@ -11,8 +11,17 @@ import statsRoutes from './routes/stats.js';
 export function createApp() {
   const app = express();
 
+  // On Render the app sits behind a proxy; trust it so rate limits count each visitor's real IP
+  app.set('trust proxy', 1);
+
+  // CLIENT_URL may hold several website addresses separated by commas (no trailing slash needed)
+  const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+    .split(',')
+    .map((o) => o.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+
   app.use(helmet());
-  app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+  app.use(cors({ origin: allowedOrigins }));
   app.use(express.json({ limit: '10kb' }));
 
   app.get('/api/health', (req, res) => res.json({ ok: true }));
