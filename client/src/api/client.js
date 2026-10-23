@@ -16,8 +16,15 @@ async function request(path, options) {
   return data;
 }
 
+// Photos that ship with the website live at /assets/...; photos uploaded from the dashboard are served by the API,
+// so they need the API address in front when the website and API are hosted separately.
+export const imageUrl = (src) => (src && src.startsWith('/api/') ? BASE + src : src);
+
 export const getPrograms = () => request('/api/programs');
 export const getCategories = () => request('/api/categories');
+export const getServices = () => request('/api/services');
+export const getCareerServices = () => request('/api/career-services');
+export const getPages = () => request('/api/pages');
 
 export const submitEnquiry = (payload) =>
   request('/api/enquiries', { method: 'POST', body: JSON.stringify(payload) });

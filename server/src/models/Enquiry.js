@@ -13,6 +13,9 @@ const enquirySchema = new mongoose.Schema(
     source: { type: String, enum: ['contact', 'consultation'], default: 'contact' },
     // Admin dashboard workflow
     status: { type: String, enum: ['new', 'contacted', 'closed'], default: 'new', index: true },
+    // Was the notification email to the team sent? (set after the enquiry is saved; the enquiry is kept either way)
+    emailStatus: { type: String, enum: ['sent', 'failed', 'not_configured'] },
+    emailError: { type: String, default: '' },
   },
   { timestamps: true }
 );

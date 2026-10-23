@@ -2,6 +2,8 @@ import { Router } from 'express';
 import Enquiry from '../models/Enquiry.js';
 import Program from '../models/Program.js';
 import Category from '../models/Category.js';
+import Service from '../models/Service.js';
+import CareerService from '../models/CareerService.js';
 import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
@@ -10,12 +12,14 @@ const router = Router();
 router.get('/stats', requireAuth, async (req, res, next) => {
   try {
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const [byStatus, lastWeek, categories, programCounts, recent] = await Promise.all([
+    const [byStatus, lastWeek, categories, programCounts, recent, services, careerCards] = await Promise.all([
       Enquiry.aggregate([{ $group: { _id: { $ifNull: ['$status', 'new'] }, count: { $sum: 1 } } }]),
       Enquiry.countDocuments({ createdAt: { $gte: weekAgo } }),
       Category.find().sort({ order: 1, name: 1 }).lean(),
       Program.aggregate([{ $group: { _id: '$category', count: { $sum: 1 } } }]),
       Enquiry.find().sort({ createdAt: -1 }).limit(5).lean(),
+      Service.countDocuments(),
+      CareerService.countDocuments(),
     ]);
 
     const status = { new: 0, contacted: 0, closed: 0 };
@@ -28,6 +32,8 @@ router.get('/stats', requireAuth, async (req, res, next) => {
         total: programCounts.reduce((n, c) => n + c.count, 0),
         byCategory: categories.map((c) => ({ category: c.name, count: perCategory.get(String(c._id)) || 0 })),
       },
+      services,
+      careerCards,
       recent,
     });
   } catch (err) {

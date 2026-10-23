@@ -32,16 +32,16 @@ function CountUp({ target, suffix = '' }) {
 }
 
 // "13+ Ready Programs · 9 Categories · 100% Customizable", read from the database.
-export function TrainingStats() {
+export function TrainingStats({ labels }) {
   const categories = useCategories();
   if (!categories) return <div className="mini-stats" style={{ minHeight: 96 }} />;
   const programs = categories.reduce((n, c) => n + c.programCount, 0);
 
   return (
     <div className="mini-stats">
-      <div><strong><CountUp target={programs} suffix="+" /></strong><span>Ready Programs</span></div>
-      <div><strong><CountUp target={categories.length} /></strong><span>Categories</span></div>
-      <div><strong><CountUp target={100} suffix="%" /></strong><span>Customizable</span></div>
+      <div><strong><CountUp target={programs} suffix="+" /></strong><span>{labels[0]}</span></div>
+      <div><strong><CountUp target={categories.length} /></strong><span>{labels[1]}</span></div>
+      <div><strong><CountUp target={100} suffix="%" /></strong><span>{labels[2]}</span></div>
     </div>
   );
 }

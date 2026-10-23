@@ -1,3 +1,5 @@
+import { useToast } from '../../components/admin/ToastProvider';
+import { useConfirm } from '../../components/admin/ConfirmProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createProgram, deleteProgram, listCategories, listPrograms, updateProgram } from '../../api/admin';
@@ -14,6 +16,8 @@ const toPayload = (f) => ({
 });
 
 export default function AdminPrograms() {
+  const toast = useToast();
+  const confirm = useConfirm();
   const [rows, setRows] = useState(null);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState('');
@@ -55,6 +59,7 @@ export default function AdminPrograms() {
         const created = await createProgram(payload);
         setRows((rs) => [...rs, created]);
       }
+      toast(editing.id ? 'Program updated' : 'Program added', 'It is now on the Training page.');
       setEditing(null);
     } catch (err) {
       setFormError(err.message);
@@ -65,9 +70,10 @@ export default function AdminPrograms() {
   };
 
   const remove = async (p) => {
-    if (!window.confirm(`Delete "${p.title}"? It will disappear from the website.`)) return;
+    if (!(await confirm({ title: 'Delete this program?', message: `"${p.title}" will disappear from the website.`, confirmLabel: 'Delete', danger: true }))) return;
     try {
       await deleteProgram(p._id);
+      toast('Program deleted');
       setRows((rs) => rs.filter((r) => r._id !== p._id));
     } catch (e) { setError(e.message); }
   };
@@ -81,7 +87,11 @@ export default function AdminPrograms() {
         <div>
           <span className="eyebrow">Website content</span>
           <h1>Training Programs</h1>
+          <p className="adm-head-text">The programs listed on the Training page. Choose a category for each one.</p>
         </div>
+      </div>
+
+      <div className="adm-add-row">
         <button type="button" className="btn btn-gold" onClick={() => open(null)}>Add program</button>
       </div>
 

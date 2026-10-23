@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Altiora Business Advisory</title>
-<!-- Test site: keep out of search engines. Remove this line when the real site launches. -->
-<meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Altiora Business Advisory partners with organizations to build capabilities, develop people and drive sustainable business success.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Altiora Business Advisory">
@@ -14,8 +12,69 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Loading screen: dark with the logo mark and a gold progress bar. Shown on every public page load and page change; on admin pages only once per browser session (see the script below and RouteLoader.jsx). */
+.preloader{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;background:radial-gradient(ellipse at 50% 38%,#1d1911 0%,#0A0A0A 62%);transition:opacity .6s ease,visibility .6s ease}
+.preloader.done{opacity:0;visibility:hidden}
+.preloader img{width:92px;height:auto;animation:pre-in .8s ease both,pre-glow 2.4s ease-in-out .8s infinite}
+.pre-track{width:min(180px,50vw);height:4px;border-radius:4px;background:rgba(185,146,74,.2);overflow:hidden}
+.pre-bar{height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#8E6E31,#D9BC7C);box-shadow:0 0 12px rgba(217,188,124,.55)}
+.preloader.route{transition-duration:.35s}
+.preloader.route .pre-bar{animation:pre-fill .55s ease-out forwards}
+@keyframes pre-fill{from{width:0}to{width:100%}}
+@keyframes pre-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes pre-glow{0%,100%{filter:drop-shadow(0 0 0 rgba(217,188,124,0))}50%{filter:drop-shadow(0 0 18px rgba(217,188,124,.35))}}
+html.preloading{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.preloader img{animation:none}}
+</style>
+<noscript><style>.preloader{display:none}</style></noscript>
 </head>
 <body>
+<div id="preloader" class="preloader" role="status" aria-label="Loading">
+  <img src="/assets/logo-preload.png" alt="Altiora Business Advisory" width="92" height="73">
+  <div class="pre-track"><div class="pre-bar" id="pre-bar"></div></div>
+</div>
+<script>
+(function () {
+  var el = document.getElementById('preloader');
+  var skip = false;
+  try { skip = location.pathname.indexOf('/admin') === 0 && sessionStorage.getItem('altiora_admin_loaded') === '1'; } catch (e) {}
+  if (skip) { el.parentNode.removeChild(el); return; }
+  document.documentElement.classList.add('preloading');
+
+  var bar = document.getElementById('pre-bar');
+  var start = Date.now(), MIN = 1100, MAX = 7000;
+  var pct = 0, ready = false, finished = false;
+
+  function finish() {
+    if (finished) return;
+    finished = true;
+    bar.style.width = '100%';
+    try { if (location.pathname.indexOf('/admin') === 0) sessionStorage.setItem('altiora_admin_loaded', '1'); } catch (e) {}
+    setTimeout(function () {
+      el.className = 'preloader done';
+      document.documentElement.classList.remove('preloading');
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 700);
+    }, 350);
+  }
+
+  // the bar creeps towards 90% while the page loads, then fills when the page, fonts and logo are ready
+  // (a timer, not requestAnimationFrame, so it also finishes when the tab is in the background)
+  var timer = setInterval(tick, 33);
+  function tick() {
+    if (finished) { clearInterval(timer); return; }
+    var elapsed = Date.now() - start;
+    pct += ((ready ? 100 : 90) - pct) * (ready ? 0.2 : 0.035);
+    bar.style.width = pct.toFixed(1) + '%';
+    if ((ready && elapsed >= MIN && pct > 99) || elapsed > MAX) { finish(); clearInterval(timer); }
+  }
+
+  function check() { ready = true; }
+  var loaded = new Promise(function (r) { if (document.readyState === 'complete') r(); else window.addEventListener('load', r); });
+  var fonts = (document.fonts && document.fonts.ready) || Promise.resolve();
+  Promise.all([loaded, fonts]).then(check, check);
+})();
+</script>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>
 </body>

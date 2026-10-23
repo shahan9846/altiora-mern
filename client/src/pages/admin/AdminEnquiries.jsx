@@ -1,3 +1,5 @@
+import { useToast } from '../../components/admin/ToastProvider';
+import { useConfirm } from '../../components/admin/ConfirmProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { deleteEnquiry, listEnquiries, setEnquiryStatus } from '../../api/admin';
 import AdminModal from '../../components/admin/AdminModal';
@@ -6,6 +8,8 @@ import { fmtDate, StatusBadge } from './AdminDashboard';
 const STATUSES = ['new', 'contacted', 'closed'];
 
 export default function AdminEnquiries() {
+  const toast = useToast();
+  const confirm = useConfirm();
   const [rows, setRows] = useState(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
@@ -36,13 +40,15 @@ export default function AdminEnquiries() {
       const updated = await setEnquiryStatus(row._id, status);
       setRows((rs) => rs.map((r) => (r._id === row._id ? updated : r)));
       setSelected((s) => (s && s._id === row._id ? updated : s));
+      toast('Status updated', `The enquiry from ${row.name} is now marked as ${status}.`);
     } catch (e) { setError(e.message); }
   };
 
   const remove = async (row) => {
-    if (!window.confirm(`Delete the enquiry from ${row.name}? This cannot be undone.`)) return;
+    if (!(await confirm({ title: 'Delete this enquiry?', message: `The enquiry from ${row.name} will be removed. This cannot be undone.`, confirmLabel: 'Delete', danger: true }))) return;
     try {
       await deleteEnquiry(row._id);
+      toast('Enquiry deleted');
       setRows((rs) => rs.filter((r) => r._id !== row._id));
       setSelected(null);
     } catch (e) { setError(e.message); }
@@ -54,6 +60,7 @@ export default function AdminEnquiries() {
         <div>
           <span className="eyebrow">Inbox</span>
           <h1>Enquiries</h1>
+          <p className="adm-head-text">Messages from your contact form and consultation requests. Open one to reply and mark how far you have got.</p>
         </div>
       </div>
 
@@ -115,6 +122,13 @@ export default function AdminEnquiries() {
             {selected.subject && (<><dt>Subject</dt><dd>{selected.subject}</dd></>)}
             <dt>Message</dt><dd className="adm-message">{selected.message}</dd>
             <dt>Status</dt><dd><StatusBadge status={selected.status} /></dd>
+            <dt>Team email</dt>
+            <dd>
+              {selected.emailStatus === 'sent' && <span className="adm-badge contacted">Email sent</span>}
+              {selected.emailStatus === 'failed' && <><span className="adm-badge failed">Email not sent</span> <small className="adm-muted">{selected.emailError}</small></>}
+              {selected.emailStatus === 'not_configured' && <span className="adm-muted">Email was not set up when this arrived</span>}
+              {!selected.emailStatus && <span className="adm-muted">—</span>}
+            </dd>
           </dl>
           <div className="adm-modal-foot">
             <div className="adm-btn-row">

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNoIndex } from '../../content/seo';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 export default function AdminLogin() {
+  useNoIndex();
   useDocumentTitle('Admin Sign In | Altiora Business Advisory');
   const { user, loading, login } = useAuth();
   const navigate = useNavigate();

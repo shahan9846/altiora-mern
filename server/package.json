@@ -8,7 +8,11 @@
     "start": "node src/index.js",
     "seed": "node seed/seedPrograms.js",
     "create-admin": "node seed/createAdmin.js",
-    "migrate-categories": "node seed/migrateCategories.js"
+    "migrate-categories": "node seed/migrateCategories.js",
+    "update-category-text": "node seed/updateCategoryText.js",
+    "seed-services": "node seed/seedServices.js",
+    "migrate-services": "node seed/migrateServices.js",
+    "seed-career-services": "node seed/seedCareerServices.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -19,6 +23,8 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.5.0",
+    "multer": "^2.4.0",
+    "sharp": "^0.35.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {

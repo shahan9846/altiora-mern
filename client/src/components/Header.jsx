@@ -2,20 +2,29 @@ import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Brand from './Brand';
 import { useConsult } from '../context/ConsultContext';
+import { useSite, usePaths } from '../context/ContentContext';
 
-export const NAV_LINKS = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/about', label: 'About' },
-  { to: '/services', label: 'Services' },
-  { to: '/training', label: 'Training' },
-  { to: '/why-altiora', label: 'Why Us' },
-  { to: '/career-guidance', label: 'Career Guidance' },
-  { to: '/contact', label: 'Contact' },
+const NAV_ITEMS = [
+  { key: 'home', label: 'Home', end: true },
+  { key: 'about', label: 'About' },
+  { key: 'services', label: 'Services' },
+  { key: 'training', label: 'Training' },
+  { key: 'why', label: 'Why Us' },
+  { key: 'career', label: 'Career' },
+  { key: 'contact', label: 'Contact' },
 ];
+
+// The menu entries with their current web addresses (used by the header and the footer)
+export function useNavLinks() {
+  const path = usePaths();
+  return NAV_ITEMS.map((l) => ({ ...l, to: path(l.key) }));
+}
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { openConsult } = useConsult();
+  const { c } = useSite();
+  const navLinks = useNavLinks();
   const { pathname } = useLocation();
 
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -32,7 +41,7 @@ export default function Header() {
         <Brand />
         <nav className="nav-primary" aria-label="Primary">
           <ul className={'nav-links' + (open ? ' open' : '')} id="nav-links">
-            {NAV_LINKS.map((l) => (
+            {navLinks.map((l) => (
               <li key={l.label}>
                 <NavLink
                   to={l.to}
@@ -44,11 +53,11 @@ export default function Header() {
               </li>
             ))}
             <li className="mobile-cta">
-              <a href="#" className="btn btn-gold" onClick={consult}>Request a Consultation</a>
+              <a href="#" className="btn btn-gold" onClick={consult}>{c('headerCta')}</a>
             </li>
           </ul>
           <div className="header-cta">
-            <a href="#" className="btn btn-gold" onClick={consult}>Request a Consultation</a>
+            <a href="#" className="btn btn-gold" onClick={consult}>{c('headerCta')}</a>
             <button
               type="button"
               className="nav-toggle"

@@ -6,6 +6,7 @@ import User from '../models/User.js';
 import { requireAuth, signToken } from '../middleware/auth.js';
 
 const router = Router();
+const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 
 const loginSchema = z.object({ email: z.string().trim().email(), password: z.string().min(1) });
 
@@ -19,7 +20,8 @@ router.post('/login', loginLimiter, async (req, res, next) => {
     if (!parsed.success) return invalid();
 
     const user = await User.findOne({ email: parsed.data.email.toLowerCase() });
-    const ok = user && (await bcrypt.compare(parsed.data.password, user.passwordHash));
+    // when the email is unknown a comparison is still made, so the response time does not reveal which emails exist
+    const ok = await bcrypt.compare(parsed.data.password, user ? user.passwordHash : DUMMY_HASH) && !!user;
     if (!ok) return invalid();
 
     res.json({ token: signToken(user), user: { name: user.name, email: user.email } });

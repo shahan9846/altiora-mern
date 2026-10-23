@@ -1,3 +1,5 @@
+import { useToast } from '../../components/admin/ToastProvider';
+import { useConfirm } from '../../components/admin/ConfirmProvider';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createCategory, deleteCategory, listCategories, updateCategory } from '../../api/admin';
@@ -6,6 +8,8 @@ import AdminModal from '../../components/admin/AdminModal';
 const EMPTY = { name: '', description: '', order: '' };
 
 export default function AdminCategories() {
+  const toast = useToast();
+  const confirm = useConfirm();
   const [rows, setRows] = useState(null);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(null); // null | { id?: string, form }
@@ -32,6 +36,7 @@ export default function AdminCategories() {
       const payload = { name, description, ...(order !== '' ? { order: Number(order) } : {}) };
       if (editing.id) await updateCategory(editing.id, payload);
       else await createCategory(payload);
+      toast(editing.id ? 'Category updated' : 'Category added');
       setEditing(null);
       await load();
     } catch (err) {
@@ -44,9 +49,10 @@ export default function AdminCategories() {
 
   const remove = async (c) => {
     setError('');
-    if (!window.confirm(`Delete the category "${c.name}"?`)) return;
+    if (!(await confirm({ title: 'Delete this category?', message: `The category "${c.name}" will be removed.`, confirmLabel: 'Delete', danger: true }))) return;
     try {
       await deleteCategory(c._id);
+      toast('Category deleted');
       setRows((rs) => rs.filter((r) => r._id !== c._id));
     } catch (e) { setError(e.message); }
   };
@@ -60,14 +66,14 @@ export default function AdminCategories() {
         <div>
           <span className="eyebrow">Website content</span>
           <h1>Program Categories</h1>
+          <p className="adm-head-text">Categories group your training programs and become the filter buttons on the Training page.</p>
         </div>
+      </div>
+
+      <div className="adm-add-row">
         <button type="button" className="btn btn-gold" onClick={() => open(null)}>Add category</button>
       </div>
 
-      <p className="adm-intro">
-        Categories group the training programs on the website and appear as filters on the Training page.
-        Pick one from the dropdown when you <Link to="/admin/programs" className="adm-link">add a training program</Link>.
-      </p>
 
       {error && <div className="adm-alert" role="alert">{error}</div>}
 

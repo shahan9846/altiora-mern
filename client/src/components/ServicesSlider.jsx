@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import services from '../data/services';
+import useServices from '../hooks/useServices';
 import ServiceCard from './ServiceCard';
 
 // Home page "What We Do" row with prev/next arrows that scroll the cards.
-export default function ServicesSlider() {
+export default function ServicesSlider({ c }) {
+  const services = useServices() || [];
   const viewport = useRef(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -19,7 +20,7 @@ export default function ServicesSlider() {
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
-  }, [update]);
+  }, [update, services.length]);
 
   const scrollBy = (dir) => {
     const el = viewport.current;
@@ -32,9 +33,9 @@ export default function ServicesSlider() {
     <>
       <div className="section-head reveal flex-between" style={{ alignItems: 'flex-end', marginBottom: 36, maxWidth: 'none', flexWrap: 'nowrap' }}>
         <div style={{ marginBottom: 0, maxWidth: 640 }}>
-          <span className="eyebrow">What We Do</span>
-          <h2>Solutions That Drive Growth</h2>
-          <p>Core areas of advisory and learning support, each shaped around the realities of your organization.</p>
+          <span className="eyebrow">{c('services.eyebrow')}</span>
+          <h2>{c('services.title')}</h2>
+          <p>{c('services.text')}</p>
         </div>
         <div className="slider-controls">
           <button type="button" className="slider-arrow" aria-label="Previous services" disabled={atStart} onClick={() => scrollBy(-1)}>

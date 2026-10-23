@@ -1,8 +1,9 @@
-// Training areas from Altiora_Website_Content.docx, in the order they appear there.
+// Training areas from Altiora_Website_Content (docx / pdf), in the order they appear there.
+// A blank line in a description starts a new paragraph on the website.
 export const CATEGORIES = [
   { name: 'Leadership & Management Development', description: 'Building confident leaders with the skills to lead people, make effective decisions, manage performance, and navigate workplace challenges.' },
   { name: 'Communication & Professional Skills', description: 'Developing essential workplace capabilities including communication, presentation, business writing, negotiation, collaboration, and interpersonal effectiveness.' },
-  { name: 'Individual Development Planning', description: 'A structured approach to professional growth, designed around individual strengths, development needs, and career goals.' },
+  { name: 'Individual Development Planning', description: 'A structured approach to professional growth, designed around individual strengths, development needs, and career goals.\n\nAltiora supports the creation of personalized development plans that identify key areas for growth and translate them into clear learning objectives, recommended training, and practical development actions.\n\nBy connecting individual aspirations with organizational priorities, we help create focused development pathways that support continuous learning, stronger capabilities, and career progression.' },
   { name: 'Banking & Financial Services', description: 'Industry-focused learning designed to strengthen knowledge and professional capabilities within the banking and financial services sector.' },
   { name: 'Compliance, Risk & Governance', description: 'Programs supporting awareness and understanding across compliance, financial crime, risk management, governance, ethics, and responsible business practices.' },
   { name: 'Customer Experience & Service Excellence', description: 'Developing the skills and mindset required to deliver professional, consistent, and customer-focused experiences.' },

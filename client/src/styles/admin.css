@@ -40,7 +40,6 @@
 .adm-top-right{ display:flex; align-items:center; gap:16px; margin-left:auto; }
 .adm-user{ font-size:.85rem; color: var(--ink-mute); }
 .adm-logout{ padding:8px 16px; font-size:.78rem; }
-.adm-menu{ display:none; }
 .adm-content{ padding:32px; max-width:1400px; width:100%; }
 .adm-page-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
 .adm .eyebrow{ margin:0; }
@@ -156,10 +155,15 @@
   .adm-grid-2{ grid-template-columns:1fr; }
 }
 @media (max-width: 860px){
-  .adm-side{ position:fixed; left:0; top:0; z-index:60; transform:translateX(-100%); transition:transform .25s var(--ease); }
-  .adm-side.open{ transform:none; }
-  .adm-scrim{ position:fixed; inset:0; background:rgba(10,10,10,.5); z-index:55; }
-  .adm-menu{ display:grid; }
+  /* small screens: the menu becomes a scrollable strip across the top, always visible */
+  .adm{ flex-direction:column; }
+  .adm-side{ position:static; width:100%; height:auto; flex-direction:row; align-items:center; gap:6px; padding:8px 12px; overflow-x:auto; border-right:0; border-bottom:1px solid var(--charcoal-line); }
+  .adm-brand{ padding:0 10px 0 0; flex-shrink:0; }
+  .adm-brand span{ display:none; }
+  .adm-side nav{ flex-direction:row; gap:2px; }
+  .adm-nav{ white-space:nowrap; padding:10px 12px; border-left:0; border-bottom:2px solid transparent; border-radius: var(--radius-m); }
+  .adm-nav.active{ border-bottom-color: var(--gold); }
+  .adm-side-foot{ margin:0 0 0 auto; padding:0; border:0; flex-shrink:0; }
   .adm-top{ padding:12px 16px; }
   .adm-user{ display:none; }
   .adm-content{ padding:20px 16px; }
@@ -177,3 +181,224 @@
 .adm-hint{ font-size:.78rem; color: var(--ink-mute); }
 .adm-field .adm-select{ padding:10px 12px; font-size:.88rem; }
 .adm-form.single{ grid-template-columns:1fr; }
+
+/* services page: thumbnails and image upload */
+.adm-thumb{ width:72px; height:48px; object-fit:cover; border-radius: var(--radius-m); border:1px solid rgba(23,20,15,.12); }
+
+.adm-upload{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+.adm-upload-preview{ width:220px; aspect-ratio:3/2; border:1px dashed rgba(23,20,15,.3); border-radius: var(--radius-m); background: var(--offwhite); display:grid; place-items:center; overflow:hidden; color: var(--ink-mute); font-size:.82rem; }
+.adm-upload-preview img{ width:100%; height:100%; object-fit:cover; display:block; }
+.adm-upload-side{ display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
+.adm-upload-side .adm-btn-sm{ margin-left:0; }
+
+/* pages & SEO editor */
+.adm-editor{ display:grid; gap:14px; padding-bottom:84px; }
+.adm-group{ padding:0; }
+.adm-group > summary{ list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:18px 22px; font-weight:600; }
+.adm-group > summary::-webkit-details-marker{ display:none; }
+.adm-group > summary::before{ content:"+"; display:inline-block; width:18px; color: var(--gold-deep); font-weight:700; }
+.adm-group[open] > summary::before{ content:"–"; }
+.adm-group > summary span{ flex:1; }
+.adm-group > summary small{ font-weight:400; color: var(--ink-mute); font-size:.78rem; }
+.adm-group[open] > summary{ border-bottom:1px solid rgba(23,20,15,.08); }
+.adm-group > .adm-hint, .adm-group > .adm-group-fields{ margin-left:22px; margin-right:22px; }
+.adm-group > .adm-hint:first-of-type{ margin-top:16px !important; }
+.adm-group-fields{ display:grid; grid-template-columns:1fr 1fr; gap:16px 20px; padding:18px 0 22px; }
+@media (max-width: 860px){ .adm-group-fields{ grid-template-columns:1fr; } }
+.adm-group-fields .adm-field label{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; }
+.adm-reset{ background:none; border:0; padding:0; font-size:.74rem; color: var(--gold-deep); text-decoration:underline; }
+.adm-count{ font-size:.74rem; color: var(--ink-mute); }
+.adm-count.good{ color:#2E7D32; }
+.adm-count.short{ color:#B27A00; }
+.adm-count.over{ color:#B3423B; }
+.adm-seo-group{ border-top:3px solid var(--gold); }
+.adm-savebar{ position:fixed; left:260px; right:0; bottom:0; z-index:30; display:flex; justify-content:space-between; align-items:center; gap:16px; padding:14px 32px; background: var(--white); border-top:1px solid rgba(23,20,15,.12); box-shadow:0 -10px 30px -20px rgba(10,10,10,.4); font-size:.88rem; color: var(--ink-soft); }
+@media (max-width: 860px){ .adm-savebar{ left:0; padding:12px 16px; } }
+.adm-seo-box{ gap:8px; padding:12px; border:1px dashed rgba(23,20,15,.2); border-radius: var(--radius-m); }
+
+/* ---- dark top bar and champagne page banners ---- */
+.adm-top{
+  background: linear-gradient(90deg, var(--black) 0%, var(--charcoal-soft) 100%);
+  border-bottom: 1px solid var(--gold-line);
+  box-shadow: 0 10px 30px -24px rgba(10,10,10,.8);
+}
+.adm-top-welcome{ display:flex; flex-direction:column; line-height:1.3; }
+.adm-top-welcome strong{ color: var(--white); font-size:.95rem; font-weight:600; letter-spacing:.01em; }
+.adm-top-welcome span{ color: var(--cream-mute); font-size:.76rem; }
+.adm-top .adm-user{ color: var(--cream-mute); }
+.adm-top .adm-logout{ background: transparent; color: var(--gold-light); border-color: var(--gold-line); }
+.adm-top .adm-logout:hover{ background: linear-gradient(180deg, var(--gold-light), var(--gold)); border-color: transparent; color: var(--black); }
+
+/* page banner: a soft champagne tint with a gold edge, light enough to sit naturally on the white page */
+.adm-page-head{
+  position: relative;
+  overflow: hidden;
+  padding: 28px 32px 28px 36px;
+  margin-bottom: 26px;
+  border: 1px solid rgba(185,146,74,.34);
+  border-radius: var(--radius-l);
+  background:
+    radial-gradient(380px 200px at 100% 0%, rgba(217,188,124,.38), transparent 70%),
+    linear-gradient(135deg, #FFFDF8 0%, #F8F0DE 100%);
+  box-shadow: 0 18px 34px -28px rgba(142,110,49,.5);
+}
+.adm-page-head::before{
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold-deep));
+}
+.adm-page-head h1{ color: var(--ink); margin: 8px 0 0; }
+.adm-page-head .eyebrow{ color: var(--gold-deep); }
+.adm-page-head .eyebrow::before{ background: var(--gold); }
+.adm-page-head .adm-link{ color: var(--gold-deep); text-decoration: underline; }
+.adm-head-text{ margin: 10px 0 0; max-width: 62ch; color: var(--ink-soft); font-size: .92rem; line-height: 1.6; }
+@media (max-width: 860px){
+  .adm-page-head{ padding: 22px 18px 22px 22px; }
+  .adm-top-welcome span{ display:none; }
+}
+
+/* the "Add ..." button sits on its own row just under the page banner */
+.adm-add-row{ display:flex; justify-content:flex-end; margin:-10px 0 18px; }
+
+/* ---- dashboard ---- */
+.adm-dash-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
+.adm-dash-head h1{ margin:0; font-size:1.8rem; }
+.adm-dash-head p{ margin:6px 0 0; color: var(--ink-mute); font-size:.92rem; }
+.adm-view-site{ font-size:.85rem; font-weight:500; color: var(--gold-deep); padding:9px 16px; border:1px solid rgba(185,146,74,.45); border-radius:999px; transition:background .2s; }
+.adm-view-site:hover{ background: rgba(185,146,74,.12); }
+
+.adm-stats{ gap:16px; }
+.adm-stat{ position:relative; border-top:1px solid rgba(23,20,15,.1); padding:20px 22px; gap:2px; box-shadow:0 14px 28px -24px rgba(23,20,15,.4); }
+.adm-stat-icon{ width:38px; height:38px; border-radius:12px; display:grid; place-items:center; background: rgba(185,146,74,.14); color: var(--gold-deep); margin-bottom:12px; }
+.adm-stat-icon svg{ width:19px; height:19px; }
+.adm-stat strong{ font-size:2.2rem; margin-top:2px; }
+.adm-stat.accent{ background: linear-gradient(145deg, #1E1A14, #121009); border-color: rgba(185,146,74,.4); }
+.adm-stat.accent .adm-stat-icon{ background: rgba(217,188,124,.18); color: var(--gold-light); }
+.adm-stat.accent .adm-stat-label,
+.adm-stat.accent .adm-stat-hint{ color: var(--cream-mute); }
+.adm-stat.accent strong{ color: var(--gold-light); }
+
+.adm-card{ box-shadow:0 14px 28px -26px rgba(23,20,15,.4); }
+.adm-card-head h2{ font-size:1.05rem; margin:0; }
+.adm-list li{ align-items:center; }
+.adm-list-main{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.adm-avatar{ width:38px; height:38px; flex-shrink:0; border-radius:50%; display:grid; place-items:center; background: rgba(185,146,74,.16); color: var(--gold-deep); font-size:.78rem; font-weight:600; }
+.adm-bars li{ margin-bottom:16px; }
+.adm-bar{ height:8px; border-radius:4px; }
+.adm-bar span{ border-radius:4px; }
+.adm-more{ display:inline-block; margin-top:2px; font-size:.82rem; color: var(--gold-deep); font-weight:500; }
+.adm-more:hover{ text-decoration:underline; }
+
+
+/* ---- side menu groups (Pages, Training) ---- */
+.adm-group-btn{ width:100%; background:none; border:0; border-left:2px solid transparent; font-family:inherit; text-align:left; cursor:pointer; }
+.adm-group-btn span{ flex:1; }
+.adm-group-btn.has-active{ color: var(--gold-light); }
+.adm-chevron{ width:16px; height:16px; flex-shrink:0; transition: transform .2s var(--ease); }
+.adm-group-nav.open > .adm-group-btn .adm-chevron{ transform: rotate(180deg); }
+.adm-group-nav.open > .adm-group-btn{ color: var(--white); }
+.adm-group-nav.open > .adm-group-btn.has-active{ color: var(--gold-light); }
+.adm-sub{ display:flex; flex-direction:column; gap:2px; margin:2px 0 6px 21px; padding-left:12px; border-left:1px solid var(--charcoal-line); }
+.adm-subnav{ padding:8px 12px; border-radius: var(--radius-m); font-size:.84rem; color: var(--cream-mute); transition: background .2s var(--ease), color .2s var(--ease); }
+.adm-subnav:hover{ background: var(--charcoal-soft); color: var(--white); }
+.adm-subnav.active{ color: var(--gold-light); background: var(--charcoal-soft); }
+@media (max-width: 860px){
+  /* the top strip has no room for folding groups: show the group's links in a row instead */
+  .adm-group-nav{ display:flex; align-items:center; }
+  .adm-group-btn{ display:none; }
+  .adm-group-nav .adm-sub{ display:flex !important; flex-direction:row; margin:0; padding:0; border:0; gap:2px; }
+  .adm-subnav{ white-space:nowrap; padding:10px 12px; }
+}
+
+/* ---- dashboard: compact, so the whole overview fits on one screen ---- */
+.adm-dash .adm-dash-head{ margin-bottom:16px; }
+.adm-dash .adm-dash-head h1{ font-size:1.5rem; }
+.adm-dash .adm-dash-head p{ margin-top:2px; font-size:.85rem; }
+.adm-dash .adm-stats{ gap:14px; margin-bottom:16px; }
+.adm-dash .adm-stat{ flex-direction:row; align-items:center; gap:14px; padding:14px 18px; transition: transform .2s, border-color .2s; }
+.adm-dash .adm-stat:hover{ transform:translateY(-2px); border-color: rgba(185,146,74,.6); }
+.adm-dash .adm-stat-icon{ margin:0; width:42px; height:42px; flex-shrink:0; }
+.adm-stat-body{ display:flex; flex-direction:column; min-width:0; }
+.adm-dash .adm-stat-label{ font-size:.7rem; }
+.adm-dash .adm-stat strong{ font-size:1.7rem; margin:0; line-height:1.15; }
+.adm-dash .adm-stat-hint{ font-size:.74rem; line-height:1.3; }
+.adm-dash .adm-card:not(.adm-stat){ padding:16px 20px; }
+.adm-dash .adm-card-head{ margin-bottom:6px; }
+.adm-dash .adm-list li{ padding:9px 0; }
+.adm-dash .adm-avatar{ width:34px; height:34px; }
+
+/* ---- SEO: page address field ---- */
+.adm-slug{ display:flex; align-items:stretch; border:1px solid rgba(23,20,15,.18); border-radius: var(--radius-m); background: var(--white); overflow:hidden; }
+.adm-slug span{ display:flex; align-items:center; padding:0 12px; background: var(--offwhite); border-right:1px solid rgba(23,20,15,.12); font-size:.85rem; color: var(--ink-mute); white-space:nowrap; }
+.adm-slug input{ flex:1; min-width:0; border:0; border-radius:0; outline:0; }
+.adm-slug:focus-within{ border-color: var(--gold); box-shadow:0 0 0 3px rgba(185,146,74,.15); }
+.adm-code{ font-family: ui-monospace, Consolas, monospace; font-size:.82rem; padding:2px 8px; border-radius:6px; background: rgba(23,20,15,.06); color: var(--ink-soft); }
+
+/* ---- side menu: the list scrolls by itself when it is taller than the screen (e.g. with "Pages" open) ---- */
+@media (min-width: 861px){
+  .adm-side nav{ flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding-right:4px; margin-right:-4px; scrollbar-width:thin; scrollbar-color: var(--charcoal-line) transparent; }
+  .adm-side nav::-webkit-scrollbar{ width:6px; }
+  .adm-side nav::-webkit-scrollbar-thumb{ background: var(--charcoal-line); border-radius:3px; }
+  .adm-side nav::-webkit-scrollbar-thumb:hover{ background: var(--gold-deep); }
+  .adm-brand{ flex-shrink:0; }
+  .adm-side-foot{ flex-shrink:0; }
+}
+
+/* ---- confirmation box (delete, sign out) ---- */
+.adm-overlay{ animation: adm-fade .2s var(--ease) both; backdrop-filter: blur(2px); }
+.adm-confirm{
+  width:100%; max-width:420px; padding:30px 28px 24px; text-align:center;
+  background: var(--white); border-radius: var(--radius-l); border-top:3px solid var(--gold);
+  box-shadow:0 30px 80px rgba(0,0,0,.4); animation: adm-pop .25s var(--ease) both;
+}
+.adm-confirm-icon{ width:56px; height:56px; margin:0 auto 16px; border-radius:50%; display:grid; place-items:center; background: rgba(185,146,74,.14); color: var(--gold-deep); }
+.adm-confirm-icon svg{ width:26px; height:26px; }
+.adm-confirm.danger{ border-top-color:#B3423B; }
+.adm-confirm.danger .adm-confirm-icon{ background: rgba(179,66,59,.1); color:#B3423B; }
+.adm-confirm h3{ margin:0; font-size:1.2rem; color: var(--ink); }
+.adm-confirm p{ margin:10px 0 0; font-size:.92rem; line-height:1.6; color: var(--ink-soft); }
+.adm-confirm-actions{ display:flex; justify-content:center; gap:12px; margin-top:24px; }
+.adm-confirm-actions .adm-btn-sm, .adm-confirm-actions .btn{ min-width:120px; justify-content:center; margin:0; padding:11px 20px; }
+.adm-btn-sm.danger.solid{ background:#B3423B; border-color:#B3423B; color:#fff; }
+.adm-btn-sm.danger.solid:hover{ background:#9C362F; border-color:#9C362F; color:#fff; }
+.adm-btn-sm:focus-visible, .adm-confirm .btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+@keyframes adm-fade{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes adm-pop{ from{ opacity:0; transform: translateY(10px) scale(.97); } to{ opacity:1; transform:none; } }
+@media (max-width: 420px){ .adm-confirm-actions{ flex-direction:column-reverse; } .adm-confirm-actions .adm-btn-sm, .adm-confirm-actions .btn{ width:100%; } }
+
+/* ---- toast messages (saved, deleted, ...) ---- */
+.adm-toasts{ position:fixed; top:92px; right:24px; z-index:200; display:flex; flex-direction:column; gap:10px; width:min(380px, calc(100vw - 32px)); pointer-events:none; }
+.adm-toast{
+  pointer-events:auto; display:flex; align-items:flex-start; gap:12px; padding:14px 14px 14px 16px;
+  background: var(--white); border:1px solid rgba(23,20,15,.1); border-left:4px solid var(--gold); border-radius: var(--radius-m);
+  box-shadow:0 20px 44px -16px rgba(23,20,15,.45); animation: adm-toast-in .35s var(--ease) both;
+}
+.adm-toast-icon{ width:30px; height:30px; flex-shrink:0; border-radius:50%; display:grid; place-items:center; background: rgba(46,125,80,.12); color:#2E7D50; }
+.adm-toast-icon svg{ width:16px; height:16px; }
+.adm-toast-body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; padding-top:1px; }
+.adm-toast-body strong{ font-size:.92rem; color: var(--ink); }
+.adm-toast-body span{ font-size:.82rem; line-height:1.45; color: var(--ink-soft); }
+.adm-toast-close{ flex-shrink:0; width:26px; height:26px; border:0; border-radius:6px; background:none; color: var(--ink-mute); cursor:pointer; display:grid; place-items:center; }
+.adm-toast-close:hover{ background: rgba(23,20,15,.06); color: var(--ink); }
+.adm-toast-close svg{ width:14px; height:14px; }
+@keyframes adm-toast-in{ from{ opacity:0; transform: translateX(24px); } to{ opacity:1; transform:none; } }
+@media (max-width: 860px){ .adm-toasts{ top:auto; bottom:84px; right:16px; left:16px; width:auto; } }
+
+/* the "Saved" line in the bottom bar is easier to notice too */
+.adm-savebar span{ font-size:.88rem; }
+
+/* ---- Notifications page ---- */
+.adm-mail-status{ display:flex; gap:14px; align-items:flex-start; padding:16px 20px; margin-bottom:16px; }
+.adm-mail-status > div{ display:flex; flex-direction:column; gap:2px; }
+.adm-mail-status strong{ font-size:.95rem; }
+.adm-mail-status span{ font-size:.85rem; color: var(--ink-soft); line-height:1.5; }
+.adm-mail-dot{ width:12px; height:12px; margin-top:5px; border-radius:50%; flex-shrink:0; background:#2E7D50; box-shadow:0 0 0 4px rgba(46,125,80,.15); }
+.adm-mail-status.warn .adm-mail-dot{ background:#C77D1A; box-shadow:0 0 0 4px rgba(199,125,26,.18); }
+.adm-mail-actions{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:20px; }
+.adm-mail-actions .adm-btn-sm{ margin:0; padding:12px 18px; }
+.adm-mail-result{ margin-top:16px; padding:12px 14px; border-radius: var(--radius-m); font-size:.88rem; line-height:1.5; }
+.adm-mail-result.ok{ background: rgba(46,125,80,.1); color:#24633F; }
+.adm-mail-result.bad{ background: rgba(179,66,59,.1); color:#9C362F; }
+.adm-badge.failed{ background: rgba(179,66,59,.12); color:#9C362F; }
