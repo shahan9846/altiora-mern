@@ -4,7 +4,6 @@ export const DEFAULT_PATHS = {
   home: '/',
   about: '/about',
   why: '/why-altiora',
-  approach: '/our-approach',
   services: '/services',
   training: '/training',
   career: '/career-guidance',

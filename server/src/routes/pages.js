@@ -9,7 +9,7 @@ const router = Router();
 const KEY = /^[a-z][a-z0-9-]{0,30}$/;
 
 // The web address each page has until the admin gives it another one (home is always "/").
-const DEFAULT_SLUGS = { about: 'about', why: 'why-altiora', approach: 'our-approach', services: 'services', training: 'training', career: 'career-guidance', contact: 'contact' };
+const DEFAULT_SLUGS = { about: 'about', why: 'why-altiora', services: 'services', training: 'training', career: 'career-guidance', contact: 'contact' };
 const RESERVED_SLUGS = ['admin', 'api', 'assets', 'sitemap.xml', 'robots.txt'];
 const FIELD_KEY = /^[A-Za-z0-9_.-]{1,80}$/;
 

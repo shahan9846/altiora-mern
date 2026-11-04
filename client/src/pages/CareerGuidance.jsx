@@ -30,7 +30,11 @@ export default function CareerGuidance() {
       {/* Intro */}
       <section className="section-white">
         <div className="container">
-          <div className="grid-2">
+          {/* photo on the left (smaller), text on the right */}
+          <div className="career-intro">
+            <div className="photo-frame reveal" style={{ aspectRatio: '4/3', borderColor: 'rgba(23,20,15,0.1)' }}>
+              <img src="/assets/svc-compliance-new.jpg" alt="Professional preparing for the next step in their career" loading="lazy" />
+            </div>
             <div className="editorial reveal">
               <span className="eyebrow">{c('intro.eyebrow')}</span>
               <h2 style={{ marginTop: 14 }}>{c('intro.title')}</h2>
@@ -39,9 +43,6 @@ export default function CareerGuidance() {
                 <a href="#" className="btn btn-gold" onClick={(e) => { e.preventDefault(); openConsult(); }}>{c('intro.button1')} <Arrow /></a>
                 <Link to={path('services')} className="btn btn-outline-light">{c('intro.button2')}</Link>
               </div>
-            </div>
-            <div className="photo-frame reveal" style={{ aspectRatio: '4/3.2', borderColor: 'rgba(23,20,15,0.1)' }}>
-              <img src="/assets/svc-compliance-new.jpg" alt="Professional preparing for the next step in their career" loading="lazy" />
             </div>
           </div>
         </div>
@@ -62,7 +63,7 @@ export default function CareerGuidance() {
                   <div className="support-icon"><ServiceIcon name={s.icon} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
-                  <span className="support-mark" aria-hidden="true"><ServiceIcon name={s.icon} /></span>
+                  {/* <span className="support-mark" aria-hidden="true"><ServiceIcon name={s.icon} /></span> */}
                 </div>
               ))}
             </div>

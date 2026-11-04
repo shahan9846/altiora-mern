@@ -7,7 +7,7 @@ const site = (process.env.SITE_URL || process.env.URL || '').trim().replace(/\/+
 const api = (process.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
 
 // default web address of each page; a page can have a custom one (Dashboard → SEO), read from the API below
-const PAGES = { home: '/', about: '/about', services: '/services', training: '/training', approach: '/our-approach', why: '/why-altiora', career: '/career-guidance', contact: '/contact' };
+const PAGES = { home: '/', about: '/about', services: '/services', training: '/training', why: '/why-altiora', career: '/career-guidance', contact: '/contact' };
 
 let robots = 'User-agent: *\nAllow: /\nDisallow: /admin\n';
 

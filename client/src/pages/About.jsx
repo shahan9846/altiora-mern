@@ -57,7 +57,7 @@ export default function About() {
               <p>{c('who.text2')}</p>
               <Link to={path('contact')} className="btn btn-outline-light" style={{ marginTop: '28px' }}>{c('who.button')} {ARROW}</Link>
             </div>
-            <div className="photo-frame reveal" style={{ aspectRatio: '4/3.4', borderColor: 'rgba(23,20,15,0.1)' }}>
+            <div className="photo-frame about-photo reveal" style={{ aspectRatio: '4/3', borderColor: 'rgba(23,20,15,0.1)' }}>
               <img src="/assets/photo-team-whiteboard.jpg" alt="A team discussing a plan around a table and whiteboard" loading="lazy" />
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function About() {
                 {[1, 2, 3, 4].map((n) => <li key={n}>{c(`believe.item${n}`)}</li>)}
               </ul>
             </div>
-            <div className="photo-frame reveal" style={{ aspectRatio: '4/3.4', borderColor: 'rgba(23,20,15,0.1)' }}>
+            <div className="photo-frame about-photo reveal" style={{ aspectRatio: '4/3', borderColor: 'rgba(23,20,15,0.1)' }}>
               <img src="/assets/photo-doha-aerial.jpg" alt="Aerial view of the Doha skyline and waterfront" loading="lazy" />
             </div>
           </div>

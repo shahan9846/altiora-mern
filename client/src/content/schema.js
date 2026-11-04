@@ -292,52 +292,52 @@ export const PAGES = {
   },
 
   // ------------------------------------------------------------------ approach
-  approach: {
-    label: 'Our Approach',
-    path: '/our-approach',
-    seo: {
-      title: 'Our Approach | Altiora Business Advisory',
-      description: 'Discover the Understand, Design, Deliver, Measure methodology behind every Altiora engagement.',
-    },
-    groups: [
-      { title: 'Banner', fields: [t('banner.title', 'Page title', 'Our Approach')] },
-      {
-        title: 'Four steps (top strip)',
-        fields: items('step', 'Step', [
-          ['Understand', "Understand the organization's goals, challenges and people."],
-          ['Design', 'Build tailored solutions around actual business requirements.'],
-          ['Deliver', 'Deliver practical, engaging and relevant programs.'],
-          ['Measure', 'Focus on application, outcomes and sustainable impact.'],
-        ], ['text', 'text']),
-      },
-      {
-        title: 'The four stages in detail',
-        fields: [
-          t('stage1.eyebrow', 'Stage 1: small heading', 'Stage 01'), t('stage1.title', 'Stage 1: heading', 'Understand'),
-          p('stage1.text', 'Stage 1: text', "Every engagement begins with listening. We take the time to understand your organization's goals, the challenges your teams are facing, and the people who will be part of the program — before proposing any solution."),
-          t('stage2.eyebrow', 'Stage 2: small heading', 'Stage 02'), t('stage2.title', 'Stage 2: heading', 'Design'),
-          p('stage2.text', 'Stage 2: text', 'With a clear picture of your needs, we design a solution around your actual business requirements — not a repackaged, generic program. Content, format and delivery are shaped to fit your context.'),
-          t('stage3.eyebrow', 'Stage 3: small heading', 'Stage 03'), t('stage3.title', 'Stage 3: heading', 'Deliver'),
-          p('stage3.text', 'Stage 3: text', 'Delivery is practical and engaging, led by experienced facilitators who keep sessions relevant to real work — not abstract theory disconnected from the job at hand.'),
-          t('stage4.eyebrow', 'Stage 4: small heading', 'Stage 04'), t('stage4.title', 'Stage 4: heading', 'Measure'),
-          p('stage4.text', 'Stage 4: text', "Our focus doesn't end at delivery. We look at how learning is applied on the job, and how the engagement contributes to sustainable, measurable impact over time."),
-        ],
-      },
-      {
-        title: 'Principles (four cards)',
-        fields: [
-          t('principles.eyebrow', 'Small heading', 'What Underpins the Approach'),
-          t('principles.title', 'Heading', 'The principles behind every project'),
-          ...items('principle', 'Card', [
-            ['Tailored Solutions', 'Every program is shaped around your organization, not a template.'],
-            ['Practical Application', 'Learning designed to be used, not just discussed.'],
-            ['Measurable Impact', 'A focus on outcomes that matter to the business.'],
-            ['Long-Term Partnership', 'Relationships that continue well past a single project.'],
-          ], ['text', 'text']),
-        ],
-      },
-    ],
-  },
+  // approach: {
+  //   label: 'Our Approach',
+  //   path: '/our-approach',
+  //   seo: {
+  //     title: 'Our Approach | Altiora Business Advisory',
+  //     description: 'Discover the Understand, Design, Deliver, Measure methodology behind every Altiora engagement.',
+  //   },
+  //   groups: [
+  //     { title: 'Banner', fields: [t('banner.title', 'Page title', 'Our Approach')] },
+  //     {
+  //       title: 'Four steps (top strip)',
+  //       fields: items('step', 'Step', [
+  //         ['Understand', "Understand the organization's goals, challenges and people."],
+  //         ['Design', 'Build tailored solutions around actual business requirements.'],
+  //         ['Deliver', 'Deliver practical, engaging and relevant programs.'],
+  //         ['Measure', 'Focus on application, outcomes and sustainable impact.'],
+  //       ], ['text', 'text']),
+  //     },
+  //     {
+  //       title: 'The four stages in detail',
+  //       fields: [
+  //         t('stage1.eyebrow', 'Stage 1: small heading', 'Stage 01'), t('stage1.title', 'Stage 1: heading', 'Understand'),
+  //         p('stage1.text', 'Stage 1: text', "Every engagement begins with listening. We take the time to understand your organization's goals, the challenges your teams are facing, and the people who will be part of the program — before proposing any solution."),
+  //         t('stage2.eyebrow', 'Stage 2: small heading', 'Stage 02'), t('stage2.title', 'Stage 2: heading', 'Design'),
+  //         p('stage2.text', 'Stage 2: text', 'With a clear picture of your needs, we design a solution around your actual business requirements — not a repackaged, generic program. Content, format and delivery are shaped to fit your context.'),
+  //         t('stage3.eyebrow', 'Stage 3: small heading', 'Stage 03'), t('stage3.title', 'Stage 3: heading', 'Deliver'),
+  //         p('stage3.text', 'Stage 3: text', 'Delivery is practical and engaging, led by experienced facilitators who keep sessions relevant to real work — not abstract theory disconnected from the job at hand.'),
+  //         t('stage4.eyebrow', 'Stage 4: small heading', 'Stage 04'), t('stage4.title', 'Stage 4: heading', 'Measure'),
+  //         p('stage4.text', 'Stage 4: text', "Our focus doesn't end at delivery. We look at how learning is applied on the job, and how the engagement contributes to sustainable, measurable impact over time."),
+  //       ],
+  //     },
+  //     {
+  //       title: 'Principles (four cards)',
+  //       fields: [
+  //         t('principles.eyebrow', 'Small heading', 'What Underpins the Approach'),
+  //         t('principles.title', 'Heading', 'The principles behind every project'),
+  //         ...items('principle', 'Card', [
+  //           ['Tailored Solutions', 'Every program is shaped around your organization, not a template.'],
+  //           ['Practical Application', 'Learning designed to be used, not just discussed.'],
+  //           ['Measurable Impact', 'A focus on outcomes that matter to the business.'],
+  //           ['Long-Term Partnership', 'Relationships that continue well past a single project.'],
+  //         ], ['text', 'text']),
+  //       ],
+  //     },
+  //   ],
+  // },
 
   // ------------------------------------------------------------------ services page
   services: {
@@ -510,4 +510,4 @@ export const DEFAULTS = Object.fromEntries(
   ])
 );
 
-export const PAGE_ORDER = ['site', 'home', 'about', 'why', 'approach', 'services', 'training', 'career', 'contact'];
+export const PAGE_ORDER = ['site', 'home', 'about', 'why', 'services', 'training', 'career', 'contact'];

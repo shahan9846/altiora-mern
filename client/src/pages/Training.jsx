@@ -33,7 +33,7 @@ export default function Training() {
 
       <section className="section-off">
         <div className="container">
-          <div className="section-head reveal">
+          <div className="section-head section-head-wide reveal">
             <span className="eyebrow">{c('areas.eyebrow')}</span>
             <h2>{c('areas.title')}</h2>
             <p>{c('areas.text')}</p>

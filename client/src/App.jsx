@@ -8,7 +8,6 @@ import About from './pages/About';
 import Services from './pages/Services';
 import ServiceDetail from './pages/ServiceDetail';
 import Training from './pages/Training';
-import OurApproach from './pages/OurApproach';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 import WhyAltiora from './pages/WhyAltiora';
@@ -32,7 +31,6 @@ const AdminSeoEditor = lazy(() => import('./pages/admin/AdminSeoEditor'));
 const PUBLIC_PAGES = [
   ['about', <About />],
   ['why', <WhyAltiora />],
-  ['approach', <OurApproach />],
   ['training', <Training />],
   ['career', <CareerGuidance />],
   ['contact', <Contact />],

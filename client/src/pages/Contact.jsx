@@ -30,11 +30,14 @@ export default function Contact() {
 
       <section className="section-off" style={{ paddingTop: '56px' }}>
         <div className="container">
-          <div className="grid-2" style={{ alignItems: 'flex-start' }}>
-            <div className="reveal">
-              <span className="eyebrow">{c('intro.eyebrow')}</span>
-              <h2 style={{ marginTop: '14px' }}>{c('intro.title')}</h2>
-              <p className="lede" style={{ marginTop: '14px', marginBottom: '24px' }}>{c('intro.text')}</p>
+          {/* heading and text across the full width, then the contact details and the form side by side below it */}
+          <div className="contact-intro reveal">
+            <span className="eyebrow">{c('intro.eyebrow')}</span>
+            <h2 style={{ marginTop: '14px' }}>{c('intro.title')}</h2>
+            <p className="lede" style={{ marginTop: '14px' }}>{c('intro.text')}</p>
+          </div>
+          <div className="grid-2" style={{ alignItems: 'flex-start', marginTop: '40px' }}>
+            <div>
               <div className="contact-box-grid">
                 <div className="contact-box reveal">
                   <div className="icon">{ICON(<><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.4" /></>)}</div>
