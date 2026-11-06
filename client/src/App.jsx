@@ -51,23 +51,19 @@ export default function App() {
     <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--black)' }} />}>
     <Routes>
       <Route element={<Layout />}>
-        {!loaded ? (
-          // wait for the saved web addresses, so a custom address is not shown as "page not found"
-          <Route path="*" element={<div style={{ minHeight: '60vh' }} />} />
-        ) : (
-          <>
-            <Route path="/" element={<Home />} />
-            <Route path={servicesPath} element={<Services />} />
-            <Route path={servicesPath + '/:slug'} element={<ServiceDetail />} />
-            {PUBLIC_PAGES.map(([key, element]) => <Route key={key} path={path(key)} element={element} />)}
-            {/* a page with a custom address: its old default address leads to the new one */}
-            {Object.keys(DEFAULT_PATHS).filter((k) => k !== 'home' && path(k) !== DEFAULT_PATHS[k]).map((k) => (
-              <Route key={'old-' + k} path={DEFAULT_PATHS[k]} element={<Navigate to={path(k)} replace />} />
-            ))}
-            {servicesPath !== DEFAULT_PATHS.services && <Route path={DEFAULT_PATHS.services + '/:slug'} element={<RedirectService to={servicesPath} />} />}
-            <Route path="*" element={<NotFound />} />
-          </>
-        )}
+        {/* The pages are drawn at once, with the default web addresses and wording. The saved ones (custom addresses,
+            edited texts) are applied as soon as the API answers, so a slow or sleeping API never leaves a blank page. */}
+        <Route path="/" element={<Home />} />
+        <Route path={servicesPath} element={<Services />} />
+        <Route path={servicesPath + '/:slug'} element={<ServiceDetail />} />
+        {PUBLIC_PAGES.map(([key, element]) => <Route key={key} path={path(key)} element={element} />)}
+        {/* a page with a custom address: its old default address leads to the new one */}
+        {Object.keys(DEFAULT_PATHS).filter((k) => k !== 'home' && path(k) !== DEFAULT_PATHS[k]).map((k) => (
+          <Route key={'old-' + k} path={DEFAULT_PATHS[k]} element={<Navigate to={path(k)} replace />} />
+        ))}
+        {servicesPath !== DEFAULT_PATHS.services && <Route path={DEFAULT_PATHS.services + '/:slug'} element={<RedirectService to={servicesPath} />} />}
+        {/* an unknown address could still be a custom one: "not found" is shown only after the saved addresses were checked */}
+        <Route path="*" element={loaded ? <NotFound /> : <div style={{ minHeight: '60vh' }} />} />
       </Route>
 
       {/* Admin dashboard: separate layout, no public header/footer */}

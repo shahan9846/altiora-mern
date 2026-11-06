@@ -17,6 +17,12 @@ export function ContentProvider({ children }) {
     []
   );
   useEffect(() => { reload(); }, [reload]);
+  // If the API is slow (a sleeping free server can need a minute), stop waiting after a few seconds: the pages
+  // already show the default wording, and the saved texts and addresses are applied whenever the answer arrives.
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 4000);
+    return () => clearTimeout(t);
+  }, []);
 
   const value = useMemo(() => ({ pages, reload, loaded }), [pages, reload, loaded]);
   return <ContentContext.Provider value={value}>{children}</ContentContext.Provider>;

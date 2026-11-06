@@ -136,9 +136,9 @@ export default function Home() {
               <Link to={path('training')} className="btn btn-outline-light" style={{ marginTop: '30px' }}>{c('training.button')} {ARROW}</Link>
             </div>
             <div className="reveal">
-              <div className="photo-frame" style={{ aspectRatio: '4/3.3', marginBottom: '24px' }}>
+              {/* <div className="photo-frame" style={{ aspectRatio: '4/3.3', marginBottom: '24px' }}>
                 <img src="/assets/img-home-why.jpg" alt="Altiora facilitator leading a workplace training session" loading="lazy" />
-              </div>
+              </div> */}
               <TrainingTags />
             </div>
           </div>
