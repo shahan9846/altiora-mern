@@ -2139,6 +2139,12 @@ section {
   border: 1px solid rgba(46, 125, 50, 0.25);
 }
 
+.form-status.info {
+  background: rgba(176, 141, 62, 0.1);
+  color: var(--ink-soft, #5a5347);
+  border: 1px solid rgba(176, 141, 62, 0.3);
+}
+
 .form-status.error {
   background: rgba(179, 66, 59, 0.08);
   color: #B3423B;

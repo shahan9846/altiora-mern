@@ -51,7 +51,7 @@ export default function ConsultModal() {
     }
     setSending(true);
     try {
-      await submitEnquiry({ ...values, source: 'consultation' });
+      await submitEnquiry({ ...values, source: 'consultation' }, () => setStatus({ type: 'info', text: 'Still sending… our server is waking up, this can take up to a minute. Please keep this page open.' }));
       setValues(EMPTY);
       setErrors({});
       setStatus(null);
