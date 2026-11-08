@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { z } from 'zod';
 import Service, { SERVICE_ICONS } from '../models/Service.js';
 import { requireAuth } from '../middleware/auth.js';
+import { validId, invalid } from '../middleware/validate.js';
 import { IMAGE_PATH, removeImageIfUnused } from '../utils/images.js';
 
 const router = Router();
@@ -10,7 +10,7 @@ const router = Router();
 const serviceSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(120),
   description: z.string().trim().min(1, 'Description is required').max(1200),
-  image: z.string().regex(IMAGE_PATH, 'Please upload an image'),
+  image: z.string().refine((v) => IMAGE_PATH.test(v), 'Please upload an image'),
   imageAlt: z.string().trim().max(160).optional().default(''),
   // optional SEO fields (empty = use the service title and description)
   seoTitle: z.string().trim().max(120).optional().default(''),
@@ -18,12 +18,6 @@ const serviceSchema = z.object({
   icon: z.enum(SERVICE_ICONS).optional(), // not sent by the dashboard form: new services get the default, edits keep theirs
   order: z.coerce.number().int().min(0).max(9999).optional(),
 });
-
-const validId = (req, res, next) =>
-  mongoose.isValidObjectId(req.params.id) ? next() : res.status(404).json({ message: 'Not found' });
-
-const invalid = (res, parsed) =>
-  res.status(400).json({ message: 'Please check the highlighted fields.', errors: parsed.error.flatten().fieldErrors });
 
 const slugify = (text) =>
   text.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') || 'service';

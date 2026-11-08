@@ -4,6 +4,7 @@ import { z } from 'zod';
 import Program from '../models/Program.js';
 import Category from '../models/Category.js';
 import { requireAuth } from '../middleware/auth.js';
+import { validId, invalid } from '../middleware/validate.js';
 
 const router = Router();
 
@@ -13,12 +14,6 @@ const programSchema = z.object({
   description: z.string().trim().min(1, 'Description is required').max(600),
   outcomes: z.array(z.string().trim().min(1).max(200)).max(10),
 });
-
-const validId = (req, res, next) =>
-  mongoose.isValidObjectId(req.params.id) ? next() : res.status(404).json({ message: 'Not found' });
-
-const invalid = (res, parsed) =>
-  res.status(400).json({ message: 'Please check the highlighted fields.', errors: parsed.error.flatten().fieldErrors });
 
 const noCategory = (res) =>
   res.status(400).json({ message: 'Please check the highlighted fields.', errors: { category: ['That category no longer exists'] } });

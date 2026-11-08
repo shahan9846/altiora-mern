@@ -65,7 +65,7 @@ const csp = [
   `script-src 'self' ${inlineScripts.join(' ')}`.trim(),
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
-  `img-src 'self' data: ${apiOrigin}`.trim(),
+  `img-src 'self' data: https://res.cloudinary.com ${apiOrigin}`.trim(),
   `connect-src 'self' ${apiOrigin}`.trim(),
   'frame-src https://www.google.com https://maps.google.com',
   "object-src 'none'",

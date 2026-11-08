@@ -24,7 +24,7 @@ export default function ServiceDetail() {
     imageAlt: service ? service.imageAlt || service.title : '',
   });
 
-  if (!services) return <div style={{ minHeight: '60vh' }} />; // still loading
+  if (!services) return <div className="content-loading" />; // still loading
   if (!service) return <NotFound />;
 
   const paragraphs = service.description.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
@@ -50,17 +50,17 @@ export default function ServiceDetail() {
 
       <section className="section-white">
         <div className="container">
-          <div className="grid-2" style={{ alignItems: 'flex-start' }}>
+          <div className="grid-2 align-start">
             <div className="reveal">
-              <div className="service-icon" style={{ marginBottom: 24 }}><ServiceIcon /></div>
+              <div className="service-icon mb-24"><ServiceIcon /></div>
               <span className="eyebrow">{number} — Service</span>
-              <h2 style={{ marginTop: 14 }}>{service.title}</h2>
+              <h2 className="mt-14">{service.title}</h2>
               {paragraphs.map((p, i) => (
-                <p key={i} className={i === 0 ? 'lede' : undefined} style={i === 0 ? { marginTop: 16 } : { marginTop: 16, color: 'var(--ink-soft)' }}>{p}</p>
+                <p key={i} className={i === 0 ? 'lede mt-16' : 'mt-16 text-soft'}>{p}</p>
               ))}
-              <Link to={path('contact') + '?service=' + service.slug} className="btn btn-outline-light" style={{ marginTop: 28 }}>Request a Consultation <Arrow /></Link>
+              <Link to={path('contact') + '?service=' + service.slug} className="btn btn-outline-light mt-28">Request a Consultation <Arrow /></Link>
             </div>
-            <div className="photo-frame reveal" style={{ aspectRatio: '4/3', borderColor: 'rgba(23,20,15,0.1)' }}>
+            <div className="photo-frame reveal photo-light ratio-4-3">
               <img src={imageUrl(service.image)} alt={service.imageAlt || service.title} loading="lazy" />
             </div>
           </div>

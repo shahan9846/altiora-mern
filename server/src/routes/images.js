@@ -4,6 +4,7 @@ import multer from 'multer';
 import sharp from 'sharp';
 import Image from '../models/Image.js';
 import { requireAuth } from '../middleware/auth.js';
+import { cloudinaryConfigured, uploadToCloudinary } from '../utils/cloudinary.js';
 
 const router = Router();
 
@@ -12,6 +13,7 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: MAX
 
 // POST /api/images (admin only, multipart field "image")
 // Checks it is a real image, fixes its rotation, shrinks it to at most 1600px wide and stores it as WebP.
+// It is saved on Cloudinary (or in MongoDB when Cloudinary is not set up) and the answer is the picture's web address.
 router.post('/', requireAuth, (req, res, next) => {
   upload.single('image')(req, res, (err) => {
     if (err) {
@@ -33,6 +35,14 @@ router.post('/', requireAuth, (req, res, next) => {
         .toBuffer();
     } catch {
       return res.status(400).json({ message: 'That file is not a valid image. Please use a JPG, PNG or WebP photo.' });
+    }
+    if (cloudinaryConfigured()) {
+      try {
+        return res.status(201).json({ url: await uploadToCloudinary(output) });
+      } catch (err) {
+        console.error('Cloudinary upload failed:', err.message);
+        return res.status(502).json({ message: 'The image could not be saved. Please try again.' });
+      }
     }
     const doc = await Image.create({
       data: output,

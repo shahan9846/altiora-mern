@@ -1,13 +1,15 @@
 import { useToast } from '../../components/admin/ToastProvider';
 import { useEffect, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { getPages, savePage, uploadImage } from '../../api/admin';
+import { Navigate, useParams } from 'react-router-dom';
+import { getPages, savePage } from '../../api/admin';
+import useImageUpload, { MAX_IMAGE_MB } from '../../hooks/useImageUpload';
+import AdminPageHead from '../../components/admin/AdminPageHead';
+import FieldError from '../../components/admin/FieldError';
 import { imageUrl } from '../../api/client';
 import { PAGES } from '../../content/schema';
 import { useContent } from '../../context/ContentContext';
 import { DEFAULT_PATHS, pathFor } from '../../content/paths';
 
-const MAX_MB = 5;
 const EMPTY_SEO = { title: '', description: '', image: '', imageAlt: '', slug: '', canonical: '' };
 
 // Colour hint for the SEO length counters (Google shows roughly this many characters)
@@ -32,7 +34,6 @@ export default function AdminSeoEditor() {
   const [notice, setNotice] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const fileInput = useRef(null);
 
   useEffect(() => {
@@ -48,6 +49,13 @@ export default function AdminSeoEditor() {
       .catch((e) => setError(e.message));
   }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // the share image is uploaded as soon as it is chosen
+  const { uploading, onFile } = useImageUpload({
+    noun: 'image',
+    setFieldErrors,
+    onUploaded: (url) => { setNotice(''); setSeo((s) => ({ ...s, image: url })); },
+  });
+
   if (!def) return <Navigate to="/admin/seo" replace />;
 
   const hasPageSeo = !!def.seo?.title; // the site-settings entry only has a default description and share image
@@ -60,25 +68,6 @@ export default function AdminSeoEditor() {
     setNotice('');
     const v = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-{2,}/g, '-').replace(/^-/, '');
     setSeo((s) => ({ ...s, slug: v }));
-  };
-
-  const onFile = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    setFieldErrors((fe) => ({ ...fe, image: undefined }));
-    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { setFieldErrors((fe) => ({ ...fe, image: ['Please choose a JPG, PNG or WebP image.'] })); return; }
-    if (file.size > MAX_MB * 1024 * 1024) { setFieldErrors((fe) => ({ ...fe, image: [`That image is too large (maximum ${MAX_MB} MB).`] })); return; }
-    setUploading(true);
-    try {
-      const { url } = await uploadImage(file);
-      setNotice('');
-      setSeo((s) => ({ ...s, image: url }));
-    } catch (err) {
-      setFieldErrors((fe) => ({ ...fe, image: [err.message] }));
-    } finally {
-      setUploading(false);
-    }
   };
 
   const save = async (e) => {
@@ -103,34 +92,32 @@ export default function AdminSeoEditor() {
 
   return (
     <>
-      <div className="adm-page-head">
-        <div>
-          <Link to="/admin/seo" className="adm-link">← All SEO</Link>
-          <h1 style={{ marginTop: 8 }}>SEO · {def.label}</h1>
-          <p className="adm-head-text">How this page looks in Google results and when its link is shared.</p>
-        </div>
-        {def.path && <a className="btn btn-outline-light" href={currentPath} target="_blank" rel="noreferrer">View page</a>}
-      </div>
+      <AdminPageHead
+        back={{ to: '/admin/seo', label: 'All SEO' }}
+        title={'SEO · ' + def.label}
+        text="How this page looks in Google results and when its link is shared."
+        action={def.path && <a className="btn btn-outline-light" href={currentPath} target="_blank" rel="noreferrer">View page</a>}
+      />
 
       {error && <div className="adm-alert" role="alert">{error}</div>}
 
       <form onSubmit={save} className="adm-editor">
         <div className="adm-card adm-group adm-seo-group">
-          {def.seo?.seoNote && <p className="adm-hint" style={{ margin: '0 0 12px' }}>{def.seo.seoNote}</p>}
+          {def.seo?.seoNote && <p className="adm-hint adm-group-note">{def.seo.seoNote}</p>}
           <div className="adm-group-fields">
             {hasPageSeo && (
               <div className="adm-field">
                 <label htmlFor="seo-title">SEO title</label>
                 <input id="seo-title" value={seo.title} onChange={setSeoValue('title')} placeholder={def.seo.title} maxLength={120} />
                 <Counter value={seo.title || def.seo.title} min={30} max={60} />
-                {fieldErrors.title && <span className="adm-err">{fieldErrors.title[0]}</span>}
+                <FieldError errors={fieldErrors} name="title" />
               </div>
             )}
             <div className="adm-field">
               <label htmlFor="seo-desc">Meta description</label>
               <textarea id="seo-desc" rows="3" value={seo.description} onChange={setSeoValue('description')} placeholder={def.seo?.description} maxLength={320} />
               <Counter value={seo.description || def.seo?.description || ''} min={70} max={160} />
-              {fieldErrors.description && <span className="adm-err">{fieldErrors.description[0]}</span>}
+              <FieldError errors={fieldErrors} name="description" />
             </div>
             {hasOwnAddress && (
               <div className="adm-field">
@@ -140,7 +127,7 @@ export default function AdminSeoEditor() {
                   <input id="seo-slug" value={seo.slug} onChange={setSlug} placeholder={defaultPath.slice(1)} maxLength={60} autoComplete="off" />
                 </div>
                 <small className="adm-hint">Lowercase letters, numbers and hyphens, for example about-us. Empty keeps the default address (/{defaultPath.slice(1)}). If you change it, the old address leads visitors to the new one and the menu updates.</small>
-                {fieldErrors.slug && <span className="adm-err">{fieldErrors.slug[0]}</span>}
+                <FieldError errors={fieldErrors} name="slug" />
               </div>
             )}
             {hasPageSeo && (
@@ -148,7 +135,7 @@ export default function AdminSeoEditor() {
                 <label htmlFor="seo-canonical">Canonical URL <small>(optional)</small></label>
                 <input id="seo-canonical" type="url" value={seo.canonical} onChange={setSeoValue('canonical')} placeholder={window.location.origin + (seo.slug ? '/' + seo.slug : defaultPath)} maxLength={300} />
                 <small className="adm-hint">Tells search engines which address is the main one for this page. Leave empty to use the page's own address. Use it only when the same content is also published at another address.</small>
-                {fieldErrors.canonical && <span className="adm-err">{fieldErrors.canonical[0]}</span>}
+                <FieldError errors={fieldErrors} name="canonical" />
               </div>
             )}
             <div className="adm-field">
@@ -163,16 +150,16 @@ export default function AdminSeoEditor() {
                     {uploading ? 'Uploading…' : seo.image ? 'Change image' : 'Choose image'}
                   </button>
                   {seo.image && <button type="button" className="adm-btn-sm" onClick={() => setSeo((s) => ({ ...s, image: '' }))}>Remove image</button>}
-                  <small className="adm-hint">JPG, PNG or WebP, up to {MAX_MB} MB.</small>
+                  <small className="adm-hint">JPG, PNG or WebP, up to {MAX_IMAGE_MB} MB.</small>
                 </div>
               </div>
-              {fieldErrors.image && <span className="adm-err">{fieldErrors.image[0]}</span>}
+              <FieldError errors={fieldErrors} name="image" />
             </div>
             <div className="adm-field">
               <label htmlFor="seo-img-alt">Share image alt text <small>(describe the picture in a few words)</small></label>
               <input id="seo-img-alt" value={seo.imageAlt} onChange={setSeoValue('imageAlt')} maxLength={160} placeholder="For example: Altiora team in a planning workshop" />
               <Counter value={seo.imageAlt} min={10} max={125} />
-              {fieldErrors.imageAlt && <span className="adm-err">{fieldErrors.imageAlt[0]}</span>}
+              <FieldError errors={fieldErrors} name="imageAlt" />
             </div>
           </div>
         </div>

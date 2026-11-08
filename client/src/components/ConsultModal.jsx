@@ -21,11 +21,11 @@ export default function ConsultModal() {
     if (!isOpen) return undefined;
     setSent(false); // a fresh form every time the popup opens
     setStatus(null);
-    document.body.style.overflow = 'hidden';
+    document.body.classList.add('no-scroll');
     const onKey = (e) => { if (e.key === 'Escape') closeConsult(); };
     document.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = '';
+      document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', onKey);
     };
   }, [isOpen, closeConsult]);
@@ -95,7 +95,7 @@ export default function ConsultModal() {
           <Field id="consult-message" label="Message *" full error={errors.message} errorText="Please add a short message.">
             <textarea id="consult-message" name="message" rows="4" value={values.message} onChange={set} maxLength={MAX_LENGTH.message} />
           </Field>
-          <button type="submit" className="btn btn-gold" style={{ width: '100%', justifyContent: 'center' }} disabled={sending}>
+          <button type="submit" className="btn btn-gold btn-block" disabled={sending}>
             {sending ? 'Sending…' : 'Submit Request'}
             <Arrow />
           </button>

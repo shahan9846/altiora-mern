@@ -26,7 +26,7 @@ const absolute = (src) => {
 // Writes the page title and the SEO / social-sharing tags for the current page.
 // Note: tags written here are visible to Google (which runs JavaScript) but not to link-preview
 // bots such as WhatsApp or Facebook, which only read the original HTML.
-export function applySeo({ title, description, image, imageAlt, canonical }) {
+function applySeo({ title, description, image, imageAlt, canonical }) {
   if (title) document.title = title;
   setTag('meta', 'name', 'description', 'content', description);
   const own = window.location.origin + window.location.pathname;

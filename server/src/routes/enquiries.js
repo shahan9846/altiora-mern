@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { z } from 'zod';
 import Enquiry from '../models/Enquiry.js';
 import { requireAuth } from '../middleware/auth.js';
+import { validId } from '../middleware/validate.js';
 import { buildEnquiryEmail, getRecipients, mailConfigured, sendMail } from '../utils/mailer.js';
 
 const router = Router();
@@ -21,9 +21,6 @@ const enquirySchema = z.object({
   message: z.string().trim().min(1, 'Message is required').max(3000),
   source: z.enum(['contact', 'consultation']).optional(),
 });
-
-const validId = (req, res, next) =>
-  mongoose.isValidObjectId(req.params.id) ? next() : res.status(404).json({ message: 'Not found' });
 
 // Emails the team about a new enquiry and records whether it worked (in the background; errors are only logged)
 async function notifyTeam(enquiry) {

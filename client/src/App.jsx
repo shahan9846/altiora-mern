@@ -48,7 +48,7 @@ export default function App() {
   const servicesPath = path('services');
 
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--black)' }} />}>
+    <Suspense fallback={<div className="page-fallback" />}>
     <Routes>
       <Route element={<Layout />}>
         {/* The pages are drawn at once, with the default web addresses and wording. The saved ones (custom addresses,
@@ -63,7 +63,7 @@ export default function App() {
         ))}
         {servicesPath !== DEFAULT_PATHS.services && <Route path={DEFAULT_PATHS.services + '/:slug'} element={<RedirectService to={servicesPath} />} />}
         {/* an unknown address could still be a custom one: "not found" is shown only after the saved addresses were checked */}
-        <Route path="*" element={loaded ? <NotFound /> : <div style={{ minHeight: '60vh' }} />} />
+        <Route path="*" element={loaded ? <NotFound /> : <div className="content-loading" />} />
       </Route>
 
       {/* Admin dashboard: separate layout, no public header/footer */}

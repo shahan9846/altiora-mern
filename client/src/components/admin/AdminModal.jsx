@@ -5,10 +5,10 @@ export default function AdminModal({ title, onClose, children, wide }) {
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
+    document.body.classList.add('no-scroll');
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      document.body.classList.remove('no-scroll');
     };
   }, [onClose]);
 

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { z } from 'zod';
 import CareerService, { CAREER_ICONS } from '../models/CareerService.js';
 import { requireAuth } from '../middleware/auth.js';
+import { validId, invalid } from '../middleware/validate.js';
 
 const router = Router();
 
@@ -12,12 +12,6 @@ const careerServiceSchema = z.object({
   icon: z.enum(CAREER_ICONS).optional(), // not sent by the dashboard form: new items get the default, edits keep theirs
   order: z.coerce.number().int().min(0).max(9999).optional(),
 });
-
-const validId = (req, res, next) =>
-  mongoose.isValidObjectId(req.params.id) ? next() : res.status(404).json({ message: 'Not found' });
-
-const invalid = (res, parsed) =>
-  res.status(400).json({ message: 'Please check the highlighted fields.', errors: parsed.error.flatten().fieldErrors });
 
 // Public: GET /api/career-services -> the Career Guidance cards in display order
 router.get('/', async (req, res, next) => {

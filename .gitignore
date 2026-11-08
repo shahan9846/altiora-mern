@@ -2,7 +2,3 @@ node_modules/
 dist/
 .env
 *.log
-
-# backups of images before they were compressed / retired
-client/_originals/
-client/_unused-assets/

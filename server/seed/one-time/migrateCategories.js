@@ -3,8 +3,8 @@
 // Run with `npm run migrate-categories` (from server/). Safe to run again.
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import { CATEGORIES } from './categories.data.js';
-import { PROGRAMS } from './programs.data.js';
+import { CATEGORIES } from '../categories.data.js';
+import { PROGRAMS } from '../programs.data.js';
 
 const REMOVED = ['Team Building & Collaboration', 'HR & People Management', 'Professional Development'];
 const FALLBACK = 'Workplace Effectiveness';

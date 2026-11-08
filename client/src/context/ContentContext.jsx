@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { getPages } from '../api/client';
-import { DEFAULTS, PAGES } from '../content/schema';
+import { DEFAULTS, IMAGE_KEYS, PAGES } from '../content/schema';
 import { useSeoTags } from '../content/seo';
 import { pathFor } from '../content/paths';
 
@@ -35,10 +35,17 @@ export function useContent() {
 }
 
 // Returns a lookup: c('hero.title') -> the edited text, or the default when none was saved.
+// A text that was cleared and saved comes back as '' and the page must not show it (see the "&&" checks in the pages).
+// Only full web addresses become links (anything else, such as "javascript:...", is ignored and the icon stays hidden)
+const webAddress = (value) => (/^https?:\/\/\S+$/i.test(value || '') ? value : '');
+
 function makeLookup(pageKey, content) {
   return (field) => {
     const v = content[field];
-    if (typeof v === 'string' && v.trim()) return v;
+    if (typeof v === 'string') {
+      if (v.trim()) return v;
+      if (!IMAGE_KEYS[pageKey]?.has(field)) return ''; // a text cleared on purpose stays empty: the page hides it
+    }
     const d = DEFAULTS[pageKey]?.[field];
     if (d === undefined && import.meta.env.DEV) console.warn(`[content] unknown field "${field}" on page "${pageKey}"`);
     return d ?? '';
@@ -79,14 +86,16 @@ export function useSite() {
   const c = usePage('site');
   return useMemo(() => {
     const number = c('whatsappNumber').replace(/\D/g, '');
+    const mapQuery = c('mapQuery').trim();
     return {
       c,
       phone: c('phone'),
       email: c('email'),
       address: c('address'),
-      whatsappUrl: `https://wa.me/${number}?text=${encodeURIComponent(c('whatsappMessage'))}`,
-      social: { linkedin: c('linkedin'), instagram: c('instagram'), facebook: c('facebook') },
-      mapSrc: `https://www.google.com/maps?q=${encodeURIComponent(c('mapQuery'))}&output=embed`,
+      // empty when the WhatsApp number was cleared: the pages then hide every WhatsApp button
+      whatsappUrl: number ? `https://wa.me/${number}?text=${encodeURIComponent(c('whatsappMessage'))}` : '',
+      social: { linkedin: webAddress(c('linkedin')), instagram: webAddress(c('instagram')), facebook: webAddress(c('facebook')), x: webAddress(c('x')), tiktok: webAddress(c('tiktok')) },
+      mapSrc: mapQuery ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed` : '', // empty = no map
     };
   }, [c]);
 }
