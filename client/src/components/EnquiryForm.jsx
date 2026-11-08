@@ -75,13 +75,12 @@ export default function EnquiryForm() {
   return (
     <form
       id="enquiry-form"
-      className="reveal"
-      style={{ background: 'var(--white)', border: '1px solid rgba(23,20,15,0.1)', borderRadius: 'var(--radius-l)', padding: 36 }}
+      className="reveal enquiry-card"
       noValidate
       onSubmit={onSubmit}
       onBlur={check}
     >
-      <h3 style={{ marginBottom: 22 }}>Send Us a Message</h3>
+      <h3 className="mb-22">Send Us a Message</h3>
       <div className="form-grid">
         <Field id="full-name" label="Name *" error={errors.name} errorText="Please enter your name.">
           <input type="text" id="full-name" name="name" value={values.name} onChange={set} maxLength={MAX_LENGTH.name} autoComplete="name" />
@@ -105,7 +104,7 @@ export default function EnquiryForm() {
           <textarea id="message" name="message" value={values.message} onChange={set} maxLength={MAX_LENGTH.message} placeholder="Tell us about your organization and what you're looking to achieve..." />
         </Field>
       </div>
-      <button type="submit" className="btn btn-gold" style={{ marginTop: 26 }} disabled={sending}>
+      <button type="submit" className="btn btn-gold mt-26" disabled={sending}>
         {sending ? 'Sending…' : 'Send Enquiry'}
         <Arrow />
       </button>

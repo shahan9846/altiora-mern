@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Brand from './Brand';
 import { useConsult } from '../context/ConsultContext';
-import { useSite, usePaths } from '../context/ContentContext';
+import { usePaths } from '../context/ContentContext';
+import { HEADER_BUTTON } from '../content/siteContent';
 
 const NAV_ITEMS = [
   { key: 'home', label: 'Home', end: true },
@@ -23,14 +24,13 @@ export function useNavLinks() {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { openConsult } = useConsult();
-  const { c } = useSite();
   const navLinks = useNavLinks();
   const { pathname } = useLocation();
 
   useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    document.body.classList.toggle('no-scroll', open);
+    return () => { document.body.classList.remove('no-scroll'); };
   }, [open]);
 
   const consult = (e) => { e.preventDefault(); setOpen(false); openConsult(); };
@@ -53,11 +53,11 @@ export default function Header() {
               </li>
             ))}
             <li className="mobile-cta">
-              <a href="#" className="btn btn-gold" onClick={consult}>{c('headerCta')}</a>
+              <a href="#" className="btn btn-gold" onClick={consult}>{HEADER_BUTTON}</a>
             </li>
           </ul>
           <div className="header-cta">
-            <a href="#" className="btn btn-gold" onClick={consult}>{c('headerCta')}</a>
+            <a href="#" className="btn btn-gold" onClick={consult}>{HEADER_BUTTON}</a>
             <button
               type="button"
               className="nav-toggle"

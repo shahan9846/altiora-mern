@@ -46,7 +46,7 @@ export default function AdminLogin() {
           <input id="adm-pass" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
         {error && <div className="adm-alert" role="alert">{error}</div>}
-        <button type="submit" className="btn btn-gold" disabled={busy} style={{ width: '100%', justifyContent: 'center' }}>
+        <button type="submit" className="btn btn-gold btn-block" disabled={busy}>
           {busy ? 'Signing in…' : 'Sign In'}
         </button>
       </form>

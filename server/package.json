@@ -8,14 +8,16 @@
     "start": "node src/index.js",
     "seed": "node seed/seedPrograms.js",
     "create-admin": "node seed/createAdmin.js",
-    "migrate-categories": "node seed/migrateCategories.js",
-    "update-category-text": "node seed/updateCategoryText.js",
+    "migrate-categories": "node seed/one-time/migrateCategories.js",
+    "update-category-text": "node seed/one-time/updateCategoryText.js",
     "seed-services": "node seed/seedServices.js",
-    "migrate-services": "node seed/migrateServices.js",
-    "seed-career-services": "node seed/seedCareerServices.js"
+    "migrate-services": "node seed/one-time/migrateServices.js",
+    "seed-career-services": "node seed/seedCareerServices.js",
+    "migrate-images": "node seed/one-time/migrateImagesToCloudinary.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

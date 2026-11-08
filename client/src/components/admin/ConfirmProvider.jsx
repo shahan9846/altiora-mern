@@ -30,11 +30,11 @@ export function ConfirmProvider({ children }) {
     if (!request) return undefined;
     const onKey = (e) => { if (e.key === 'Escape') answer(false); };
     document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
+    document.body.classList.add('no-scroll');
     cancelRef.current?.focus(); // the safe choice is focused, so Enter never deletes by accident
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      document.body.classList.remove('no-scroll');
     };
   }, [request, answer]);
 

@@ -1939,29 +1939,42 @@ section {
   margin-top: 24px;
 }
 
+/* Social buttons in the footer: the logo in white on a round button with a soft gradient in the brand's colour */
 .footer-social a {
   width: 36px;
   height: 36px;
-  border: 1px solid var(--cream-line);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all .2s var(--ease);
+  color: #fff;
+  background: var(--charcoal-soft);
+  box-shadow: 0 10px 18px -8px rgba(80, 70, 190, 0.45);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), filter .2s var(--ease);
 }
 
 .footer-social a svg {
-  width: 15px;
-  height: 15px;
-  color: var(--cream-mute);
+  width: 17px;
+  height: 17px;
+  color: #fff;
 }
 
 .footer-social a:hover {
-  border-color: var(--gold);
+  transform: translateY(-3px);
+  filter: brightness(1.08);
+  box-shadow: 0 14px 22px -8px rgba(80, 70, 190, 0.6);
 }
 
-.footer-social a:hover svg {
-  color: var(--gold-light);
+.footer-social .social-facebook { background: linear-gradient(135deg, #1e7cf2 0%, #2a2a9c 100%); }
+.footer-social .social-linkedin { background: linear-gradient(135deg, #0a8db5 0%, #0040d6 100%); }
+.footer-social .social-whatsapp { background: linear-gradient(135deg, #1ff26b 0%, #00a050 100%); }
+.footer-social .social-x,
+.footer-social .social-tiktok {
+  background: linear-gradient(135deg, #2a0f55 0%, #050008 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), 0 10px 18px -8px rgba(80, 70, 190, 0.45);
+}
+.footer-social .social-instagram {
+  background: linear-gradient(135deg, #ffd34e 0%, #ff8a3d 25%, #f0348a 55%, #9a3de0 82%, #5b5fe8 100%);
 }
 
 .footer-col h4 {
@@ -2959,12 +2972,11 @@ h1 em {
   border-radius: var(--radius-l);
   background: rgba(185, 146, 74, 0.1);
   color: var(--gold-light);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
   transition: background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
-}
-
-.support-icon svg {
-  width: 26px;
-  height: 26px;
 }
 
 .support-card:hover .support-icon {
@@ -3884,8 +3896,12 @@ h1 em {
   max-width: 550px;
   justify-self: center;
 }
+
 /* a section heading with its text across the whole width (Training areas) */
-.section-head.section-head-wide, .section-head.section-head-wide p { max-width: none; }
+.section-head.section-head-wide,
+.section-head.section-head-wide p {
+  max-width: none;
+}
 
 /* ---------- Home: service cards that glide endlessly (like a row of partner logos) ---------- */
 /* ---------- Home: service cards with auto sliding and navigation controls ---------- */
@@ -3935,29 +3951,280 @@ h1 em {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
+
 .marquee-track {
   display: flex;
   width: max-content;
   animation: marquee-scroll var(--marquee-time, 30s) linear infinite;
   will-change: transform;
 }
+
 .marquee:hover .marquee-track,
-.marquee:focus-within .marquee-track { animation-play-state: paused; }
-.marquee-half { display: flex; flex-shrink: 0; }
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-half {
+  display: flex;
+  flex-shrink: 0;
+}
+
 .marquee-half .service-card-img {
   flex: 0 0 360px;
   width: 360px;
-  margin-right: 24px;   /* a margin (not a gap) so both halves are exactly the same length */
+  margin-right: 24px;
+  /* a margin (not a gap) so both halves are exactly the same length */
 }
-/* the cards in this row are always visible (no fade-in on scroll) */
-.marquee .service-card-img.reveal { opacity: 1; transform: none; }
-@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-@media (max-width: 620px) { .marquee-half .service-card-img { flex-basis: 280px; width: 280px; margin-right: 16px; } }
+/* the cards in this row are always visible (no fade-in on scroll) */
+.marquee .service-card-img.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 620px) {
+  .marquee-half .service-card-img {
+    flex-basis: 280px;
+    width: 280px;
+    margin-right: 16px;
+  }
+}
 
 /* reduced motion: no movement; the row can be scrolled by hand and the copy is not shown */
 @media (prefers-reduced-motion: reduce) {
-  .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-  .marquee-track { animation: none; }
-  .marquee-copy { display: none; }
+  .marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .marquee-copy {
+    display: none;
+  }
+}
+
+/* =====================================================================
+   Spacing helpers and small layout rules
+   These used to be written inside the .jsx files as style={{ ... }}. They live here now,
+   so every look of the website can be changed in this file.
+   The spacing helpers use !important so they always win, like a style written on the element.
+   ===================================================================== */
+
+/* Space above (mt-) and below (mb-) an element, in pixels. Example: <h2 className="mt-14"> */
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mt-14 {
+  margin-top: 14px !important;
+}
+
+.mt-16 {
+  margin-top: 16px !important;
+}
+
+.mt-18 {
+  margin-top: 18px !important;
+}
+
+.mt-20 {
+  margin-top: 20px !important;
+}
+
+.mt-22 {
+  margin-top: 22px !important;
+}
+
+.mt-24 {
+  margin-top: 24px !important;
+}
+
+.mt-26 {
+  margin-top: 26px !important;
+}
+
+.mt-28 {
+  margin-top: 28px !important;
+}
+
+.mt-30 {
+  margin-top: 30px !important;
+}
+
+.mt-40 {
+  margin-top: 40px !important;
+}
+
+.mt-44 {
+  margin-top: 44px !important;
+}
+
+.mb-22 {
+  margin-bottom: 22px !important;
+}
+
+.mb-24 {
+  margin-bottom: 24px !important;
+}
+
+/* Softer text colour for a second paragraph */
+.text-soft {
+  color: var(--ink-soft) !important;
+}
+
+/* A button that fills the whole row (forms) */
+.btn.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Photo frames on the inner pages: a light border and the shape of the photo (width : height) */
+.photo-frame.photo-light {
+  border-color: rgba(23, 20, 15, 0.1);
+}
+
+.photo-frame.ratio-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+/* A wide, short frame (16 wide : 10 high). The photo always fills it (object-fit: cover), cropping a little at the top and bottom.
+   Used on Home and Why Altiora. For an even shorter frame use 16 / 9, for a taller one 3 / 2. */
+.photo-frame.ratio-16-10 {
+  aspect-ratio: 16 / 10;
+}
+
+/* A heading block that uses the full width of the page (Services page): the title is kept to about two lines,
+   the paragraph under it runs the full width. */
+.section-head.section-head-full {
+  max-width: none;
+}
+
+.section-head.section-head-full h2 {
+  max-width: 19em; /* about 2 lines for the Services title; make it larger for fewer, longer lines */
+}
+
+.section-head.section-head-full p {
+  max-width: none;
+}
+
+/* Section heading blocks with their own width */
+.section-head.max-w-720 {
+  max-width: 720px;
+}
+
+/* A container without side padding, and two-column rows aligned to the top or the middle */
+.container.no-pad {
+  padding: 0;
+}
+
+.grid-2.align-start {
+  align-items: flex-start;
+}
+
+.grid-2.align-center {
+  align-items: center;
+}
+
+/* Contact page */
+.section-off.contact-section {
+  padding-top: 56px;
+}
+
+.section-white.map-section {
+  padding: 0;
+}
+
+/* Career Guidance: the two buttons under the introduction */
+.career-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+/* Home page: the heading block of the dark "Our approach" band */
+.section-head.approach-head {
+  max-width: none;
+  margin-bottom: 34px;
+}
+
+/* Kept on one line on every screen, as before. (On phones this makes the text run past the edge; to let it wrap,
+   delete the white-space line below.) */
+.section-charcoal.has-bg .section-head.approach-head p {
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* Home page: heading row above the sliding service cards */
+.section-head.services-slider-head {
+  align-items: flex-end;
+  margin-bottom: 36px;
+  max-width: none;
+  flex-wrap: nowrap;
+}
+
+.services-slider-text {
+  margin-bottom: 0;
+  max-width: 640px;
+}
+
+/* Home page: empty space kept while the training numbers load */
+.mini-stats.is-loading {
+  min-height: 96px;
+}
+
+/* Training page: the link in the "no programs yet" message */
+.explorer-empty a {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+
+/* The white box around the Contact page form */
+.enquiry-card {
+  background: var(--white);
+  border: 1px solid rgba(23, 20, 15, 0.1);
+  border-radius: var(--radius-l);
+  padding: 36px;
+}
+
+/* Placeholders shown while a page is loading */
+.page-fallback {
+  min-height: 100vh;
+  background: var(--black);
+}
+
+.content-loading {
+  min-height: 60vh;
+}
+
+/* Home page hero: which part of each picture stays visible when the picture is cropped */
+.hero-slider .hero-slide:nth-child(1) img {
+  object-position: center center;
+}
+
+.hero-slider .hero-slide:nth-child(2) img {
+  object-position: center 35%;
+}
+
+.hero-slider .hero-slide:nth-child(3) img {
+  object-position: center 45%;
+}
+
+/* Added to <body> while a popup or the phone menu is open, so the page behind it does not scroll */
+.no-scroll {
+  overflow: hidden !important;
 }

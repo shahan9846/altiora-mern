@@ -1,11 +1,14 @@
 // Every editable text on the website, grouped by page.
 // - The dashboard builds its edit forms from this file.
 // - The pages read their wording through usePage(key).c('field.key'); anything the admin has not changed
-//   (or leaves empty) shows the `default` below, so a page can never end up blank.
+//   shows the `default` below. A text the admin clears and saves is empty on purpose: the page hides it.
+//   (Pictures can not be empty: they fall back to the original photo.)
 // To make another text editable: add a field here, then use c('that.key') in the page.
 
 const t = (key, label, def) => ({ key, label, type: 'text', default: def });
 const p = (key, label, def) => ({ key, label, type: 'textarea', default: def });
+// A picture. `def` is the photo that ships with the website (/assets/...); the admin can replace it with an upload.
+const img = (key, label, def, hint) => ({ key, label, type: 'image', default: def, hint });
 
 // Fields repeated for numbered items, e.g. items('home.value', 'Point', 5, [...])
 const items = (prefix, noun, defaults, kinds = ['text', 'textarea']) =>
@@ -25,9 +28,16 @@ export const PAGES = {
     },
     groups: [
       {
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
+        fields: [
+          img('logo.image', 'Logo (header and footer)', '/assets/logo-mark.png', 'Square or nearly square, ideally with a transparent background.'),
+        ],
+      },
+      {
         title: 'Contact details',
         fields: [
-          t('phone', 'Phone number', '+974 XXXX XXXX'),
+          t('phone', 'Phone number', '+974 6666 8704'),
           t('email', 'Email address', 'info@altiorabusinessadvisory.com'),
           t('address', 'Address', 'Doha, Qatar'),
           t('mapQuery', 'Map location (a place name or address Google Maps can find)', 'Doha, Qatar'),
@@ -36,34 +46,19 @@ export const PAGES = {
       {
         title: 'WhatsApp',
         fields: [
-          t('whatsappNumber', 'WhatsApp number (country code and number, no + or spaces)', '97400000000'),
+          t('whatsappNumber', 'WhatsApp number (country code and number, no + or spaces)', '97466668704'),
           p('whatsappMessage', 'First message the visitor sees', 'Hello Altiora Business Advisory, I would like to enquire about your services.'),
         ],
       },
       {
         title: 'Social links',
-        description: 'Full web addresses, for example https://www.linkedin.com/company/altiora. Leave empty to hide the icon.',
+        description: 'Full web addresses, for example https://www.linkedin.com/company/altiora. Type a new address to replace the current one. Clear a box and save to hide that icon.',
         fields: [
           t('linkedin', 'LinkedIn', ''),
-          t('instagram', 'Instagram', ''),
-          t('facebook', 'Facebook', ''),
-        ],
-      },
-      {
-        title: 'Header and footer',
-        fields: [
-          t('headerCta', 'Header button label', 'Request a Consultation'),
-          t('tagline', 'Footer line under the description', 'Altiora Business Advisory | Elevating Potential. Delivering Excellence.'),
-          p('footerText', 'Footer description', 'A business advisory firm helping organizations build capability, develop people and drive sustainable growth through practical, tailored learning solutions.'),
-          t('copyright', 'Company name in the copyright line', 'Altiora Business Advisory'),
-        ],
-      },
-      {
-        title: 'Closing banner (shown at the bottom of several pages)',
-        fields: [
-          t('cta.title', 'Heading', 'Ready to Elevate Your People and Performance?'),
-          p('cta.text', 'Text', "Let's build practical solutions that create meaningful and sustainable business impact."),
-          t('cta.button', 'Button label', 'Request a Consultation'),
+          t('instagram', 'Instagram', 'https://www.instagram.com/altiorabusinessadvisory.qa?xtok=MWtlanMzeWQ4ZDBscg%3D%3D&utm_source=qr'),
+          t('facebook', 'Facebook', 'https://www.facebook.com/people/Altiora-Businesses-Advisory/pfbid02ReE3vo6r8kwnrHjjUwFprT3AgcjAC814CCjPA8VdazJTp6VuZaDmnzzxj6VAAddyl/?mibextid=wwXIfr&rdid=SnofQSC0hrPEXarZ&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CjBypZZ6C%2F%3Fmibextid%3DwwXIfr'),
+          t('x', 'X (Twitter)', ''),
+          t('tiktok', 'TikTok', ''),
         ],
       },
     ],
@@ -78,6 +73,18 @@ export const PAGES = {
       description: 'Altiora Business Advisory partners with organizations to build capabilities, develop people and drive sustainable business success.',
     },
     groups: [
+      {
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
+        fields: [
+          img('hero1.image', 'Hero slide 1 photo', '/assets/hero-advisory-strategy.jpg', 'Landscape photo, at least 1600 × 900 px. Faces near the centre stay visible when the edges are cropped.'),
+          img('hero2.image', 'Hero slide 2 photo', '/assets/hero-practical-training.jpg', 'Landscape photo, at least 1600 × 900 px. Faces near the centre stay visible when the edges are cropped.'),
+          img('hero3.image', 'Hero slide 3 photo', '/assets/hero-trusted-partnership.jpg', 'Landscape photo, at least 1600 × 900 px. Faces near the centre stay visible when the edges are cropped.'),
+          img('about.image', 'About block photo', '/assets/photo-team-whiteboard.jpg', 'Landscape, about 4:3.'),
+          img('approach.image', 'Approach block background', '/assets/img-training.jpg', 'Wide photo; the text sits on top of it.'),
+          img('cta.image', 'Closing banner background', '/assets/img-approach.jpg', 'Wide photo; the text sits on top of it.'),
+        ],
+      },
       {
         title: 'Hero (three slides)',
         fields: [
@@ -98,22 +105,11 @@ export const PAGES = {
         ],
       },
       {
-        title: 'Five points under the hero',
-        fields: items('value', 'Point', [
-          ['People Focussed', 'Developing talent and strengthening capabilities.'],
-          ['Custom Solutions', 'Tailored programs aligned to your business goals.'],
-          ['Practical & Impactful', 'Real-world learning for measurable results.'],
-          ['Trust & Partnership', 'Building long-term relationships you can rely on.'],
-          ['Driving Growth', 'Empowering organizations to achieve excellence.'],
-        ], ['text', 'text']),
-      },
-      {
         title: 'About block',
         fields: [
           t('about.eyebrow', 'Small heading', 'Who We Are'),
           t('about.title', 'Heading', 'About Altiora'),
           p('about.text', 'First paragraph', 'We provide tailored learning and development solutions, professional development programs, organizational capability support, and career guidance designed to help individuals and organizations grow, perform, and succeed.'),
-          p('about.text2', 'Second paragraph', 'From strengthening workforce capabilities to supporting individual career journeys, our approach is focused on creating meaningful learning experiences that translate into real-world value.'),
           t('about.button', 'Button label', 'More About Us'),
         ],
       },
@@ -133,40 +129,23 @@ export const PAGES = {
           p('why.title', 'Heading (a new line starts a new line in the heading)', 'Development with purpose'),
           p('why.text', 'Text', 'We go beyond conventional training by delivering practical, relevant, and engaging development experiences designed to strengthen capabilities and create meaningful workplace impact.'),
           t('why.button', 'Button label', 'Discover Why Altiora'),
-          t('stat1.value', 'Highlight 1: value (a number with a symbol counts up)', '100%'),
-          t('stat1.label', 'Highlight 1: label', 'Tailored Solutions'),
-          t('stat2.value', 'Highlight 2: value', 'Practical'),
-          t('stat2.label', 'Highlight 2: label', 'Learning Impact'),
-          t('stat3.value', 'Highlight 3: value', 'Long-term'),
-          t('stat3.label', 'Highlight 3: label', 'Client Partnership'),
-          t('stat4.value', 'Highlight 4: value', 'Every Time'),
-          t('stat4.label', 'Highlight 4: label', 'Commitment to Excellence'),
         ],
       },
       {
-        title: 'Approach block (four steps)',
+        title: 'Approach block (the four steps are fixed)',
         fields: [
           t('approach.eyebrow', 'Small heading', 'Our Approach'),
           t('approach.title', 'Heading', 'A Structured, Practical Methodology'),
           p('approach.text', 'Text', 'Every engagement follows the same disciplined process, adapted to your organization.'),
-          ...items('step', 'Step', [
-            ['Understand', "Understand the organization's goals, challenges and people."],
-            ['Design', 'Build tailored solutions around actual business requirements.'],
-            ['Deliver', 'Deliver practical, engaging and relevant programs.'],
-            ['Measure', 'Focus on application, outcomes and sustainable impact.'],
-          ], ['text', 'text']),
         ],
       },
       {
-        title: 'Training block (the numbers and tags come from your categories and programs)',
+        title: 'Training block (the three numbers, their labels and the tags are automatic)',
         fields: [
           t('training.eyebrow', 'Small heading', 'Training Programs'),
           t('training.title', 'Heading', 'Learning Designed for Today’s Workplace'),
           p('training.text', 'Text', 'Our training programs are designed to build practical skills, strengthen professional capabilities, and support better performance in the workplace.'),
           t('training.button', 'Button label', 'View Training Programs'),
-          t('training.label1', 'Number 1 label', 'Ready Programs'),
-          t('training.label2', 'Number 2 label', 'Categories'),
-          t('training.label3', 'Number 3 label', 'Customizable'),
         ],
       },
     ],
@@ -181,66 +160,37 @@ export const PAGES = {
       description: 'Learn who Altiora Business Advisory is, our vision, mission, values and why organizations choose us as their development partner.',
     },
     groups: [
-      { title: 'Banner', fields: [t('banner.title', 'Page title', 'About Us')] },
+      {
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
+        fields: [
+          img('banner.image', 'Banner photo', '/assets/photo-doha-sunset.jpg', 'Wide photo behind the page title.'),
+          img('who.image', 'Who we are photo', '/assets/photo-team-meeting.jpg', 'Landscape, about 4:3.'),
+          img('cta.image', 'Closing banner background', '/assets/photo-doha-aerial.jpg', 'Wide photo; the text sits on top of it.'),
+        ],
+      },
       {
         title: 'Who we are',
         fields: [
           t('who.eyebrow', 'Small heading', 'Who We Are'),
           t('who.title', 'Heading', 'About Altiora'),
           p('who.text1', 'First paragraph', 'Altiora Business Advisory was established with a clear purpose — to create meaningful development opportunities that enable people and organizations to move forward with confidence. Based in Qatar, Altiora brings a practical and people-focused approach to development.'),
-          p('who.text2', 'Second paragraph', 'We believe that meaningful progress comes from understanding where you are today, recognizing where you want to go, and building the right capabilities to get there.'),
           t('who.button', 'Button label', 'Talk To Our Team'),
         ],
       },
       {
-        title: 'Purpose, mission and vision',
+        title: 'Purpose, mission and vision (the three cards are fixed)',
         fields: [
           t('foundation.eyebrow', 'Small heading', 'Our Foundation'),
           t('foundation.title', 'Heading', 'Vision, Mission & Belief'),
           p('foundation.text', 'Text', 'Our approach is centered on relevance, quality, and continuous improvement. We aim to create development experiences that go beyond learning — helping individuals strengthen their potential and organizations build capable, confident, and future-ready teams.'),
-          ...items('pmv', 'Card', [
-            ['Our Vision', 'To be a trusted partner in developing people, strengthening organizations, and enabling continuous professional growth.'],
-            ['Our Mission', 'To create practical, relevant, and meaningful development experiences that strengthen capabilities, encourage continuous learning, and support individuals and organizations in achieving their goals.'],
-            ['Our Belief', 'At Altiora, we believe progress begins with potential — and the right development can elevate it.'],
-          ]),
         ],
       },
       {
-        title: 'What we believe',
-        fields: [
-          t('believe.eyebrow', 'Small heading', 'What We Believe'),
-          t('believe.title', 'Heading', 'Principles behind every engagement'),
-          t('believe.item1', 'Point 1', 'Learning should be practical, not theoretical for its own sake.'),
-          t('believe.item2', 'Point 2', "Every organization's context is different, and solutions should reflect that."),
-          t('believe.item3', 'Point 3', 'Long-term partnerships create better outcomes than one-off projects.'),
-          t('believe.item4', 'Point 4', 'Quality and professionalism matter in every engagement, large or small.'),
-        ],
-      },
-      {
-        title: 'Our values (five cards)',
+        title: 'Our values (the five cards are fixed)',
         fields: [
           t('values.eyebrow', 'Small heading', 'What Guides Us'),
           t('values.title', 'Heading', 'Our Values'),
-          ...items('value', 'Value', [
-            ['Excellence', 'We strive for quality and professionalism in everything we deliver.'],
-            ['Integrity', 'We build relationships based on trust, transparency, and accountability.'],
-            ['Collaboration', 'We believe the strongest solutions are created by listening, understanding, and working together.'],
-            ['Growth', 'We believe continuous learning is fundamental to individual and organizational progress.'],
-            ['Impact', 'We focus on development that creates meaningful and practical outcomes.'],
-          ]),
-        ],
-      },
-      {
-        title: 'Why organizations choose us',
-        fields: [
-          t('choose.eyebrow', 'Small heading', 'Why Organizations Choose Us'),
-          t('choose.title', 'Heading', 'A practical, people-first approach'),
-          ...items('choose', 'Card', [
-            ['Tailored, Not Templated', 'Solutions built around your organization, not generic packages.'],
-            ['Practical Delivery', 'Programs designed for real application, not just awareness.'],
-            ['Long-Term Partnership', 'Relationships that extend beyond a single project.'],
-            ['Professional Standards', 'Quality and rigour applied consistently across every engagement.'],
-          ], ['text', 'text']),
         ],
       },
     ],
@@ -255,37 +205,28 @@ export const PAGES = {
       description: 'Development with purpose: practical, relevant and people-focused learning and career support from Altiora Business Advisory.',
     },
     groups: [
-      { title: 'Banner', fields: [t('banner.title', 'Page title', 'Why Altiora')] },
+      {
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
+        fields: [
+          img('banner.image', 'Banner photo', '/assets/img-why.jpg', 'Wide photo behind the page title.'),
+          img('intro.image', 'Introduction photo', '/assets/img-home-why.jpg', 'Landscape, about 4:3.'),
+          img('cta.image', 'Closing banner background', '/assets/closing-team-planning.jpg', 'Wide photo; the text sits on top of it.'),
+        ],
+      },
       {
         title: 'Introduction',
         fields: [
           t('intro.eyebrow', 'Small heading', 'Why Altiora?'),
           t('intro.title', 'Heading', 'Development with purpose'),
           p('intro.text1', 'First paragraph', 'At Altiora, every development journey begins with a clear purpose. Our approach is centered on identifying the right priorities and creating solutions that align with individual and organizational goals.'),
-          p('intro.text2', 'Second paragraph', 'We go beyond conventional training by delivering practical, relevant, and engaging development experiences designed to strengthen capabilities and create meaningful workplace impact.'),
         ],
       },
       {
-        title: 'What sets us apart (six cards)',
+        title: 'What sets us apart (the six cards are fixed)',
         fields: [
           t('apart.eyebrow', 'Small heading', 'Our Strengths'),
           t('apart.title', 'Heading', 'What Sets Us Apart'),
-          ...items('apart', 'Card', [
-            ['Tailored to Your Needs', 'We recognize that every organization and individual is different. Our solutions can be adapted to specific objectives, audiences, industries, and development priorities.'],
-            ['Practical & Relevant', 'We focus on learning that participants can understand, relate to, and apply in their professional environment.'],
-            ['People-Focused Approach', 'Development is about people. We place the learner at the center of the experience while keeping organizational objectives in focus.'],
-            ['Flexible Solutions', 'From focused workshops to customized development programs, our approach allows us to respond to different learning requirements and delivery needs.'],
-            ['Quality-Driven', 'We are committed to maintaining professionalism, relevance, and quality throughout every stage of the learning journey.'],
-            ['Built for Continuous Growth', 'We look beyond a single training session and encourage development that supports continued learning, stronger capabilities, and long-term professional growth.'],
-          ]),
-        ],
-      },
-      {
-        title: 'Closing banner',
-        fields: [
-          t('cta.title', 'Heading', 'Your Goals. Our Focus.'),
-          p('cta.text', 'Text', 'Whether you are developing a team, strengthening a specific capability, or investing in your own professional growth, Altiora works with you to create a development experience that has purpose and direction.'),
-          t('cta.button', 'Button label', 'Request a Consultation'),
         ],
       },
     ],
@@ -350,9 +291,16 @@ export const PAGES = {
     },
     groups: [
       {
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
+        fields: [
+          img('banner.image', 'Banner photo', '/assets/svc-training-new.jpg', 'Wide photo behind the page title.'),
+          img('cta.image', 'Closing banner background', '/assets/closing-consultation.jpg', 'Wide photo; the text sits on top of it.'),
+        ],
+      },
+      {
         title: 'Page text',
         fields: [
-          t('banner.title', 'Page title', 'Our Services'),
           t('intro.eyebrow', 'Small heading', 'Our Services'),
           t('intro.title', 'Heading', 'Solutions Designed to Develop People and Strengthen Performance'),
           p('intro.text', 'Text', 'At Altiora, we turn development needs into focused, practical solutions. Whether supporting an organization in strengthening its workforce or helping an individual advance professionally, our services are designed with a clear understanding of the desired outcome.'),
@@ -372,12 +320,12 @@ export const PAGES = {
     },
     groups: [
       {
-        title: 'Page text',
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
         fields: [
-          t('banner.title', 'Page title', 'Training Programs'),
-          t('intro.eyebrow', 'Small heading', 'Training Programs'),
-          t('intro.title', 'Heading', 'Learning Designed for Today’s Workplace'),
-          p('intro.text', 'Text', 'Our training programs are designed to build practical skills, strengthen professional capabilities, and support better performance in the workplace. Programs can be delivered as ready-to-run courses or customized to suit your organization’s objectives, industry requirements, participant profiles, and learning priorities.'),
+          img('banner.image', 'Banner photo', '/assets/photo-training-session.jpg', 'Wide photo behind the page title.'),
+          img('custom.image', 'Custom programs photo', '/assets/photo-advisory-discussion.jpg', 'Landscape, about 4:3.'),
+          img('cta.image', 'Closing banner background', '/assets/closing-training-seminar.jpg', 'Wide photo; the text sits on top of it.'),
         ],
       },
       {
@@ -397,15 +345,6 @@ export const PAGES = {
           p('areas.text', 'Text', 'From leadership and communication to compliance, customer experience, and essential business skills, Altiora offers programs across key areas that address the evolving development needs of professionals and organizations.'),
         ],
       },
-      {
-        title: 'Closing banner',
-        fields: [
-          t('cta.title', 'Heading', 'Looking for a Specific Program?'),
-          p('cta.text', 'Text', 'Tell us what you want your people to learn, improve, or achieve, and we’ll help identify the right training solution.'),
-          t('cta.button1', 'Button 1 label', 'Explore Programs'),
-          t('cta.button2', 'Button 2 label', 'Request a Customized Program'),
-        ],
-      },
     ],
   },
 
@@ -419,7 +358,15 @@ export const PAGES = {
       description: 'Personalized career guidance: career planning, CV and LinkedIn profile help, interview preparation and support for graduates and career changers.',
     },
     groups: [
-      { title: 'Banner', fields: [t('banner.title', 'Page title', 'Career Guidance')] },
+      {
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
+        fields: [
+          img('banner.image', 'Banner photo', '/assets/svc-compliance-new.jpg', 'Wide photo behind the page title.'),
+          img('intro.image', 'Introduction photo', '/assets/career-resume-interview.jpg', 'Landscape, about 4:3.'),
+          img('cta.image', 'Closing banner background', '/assets/closing-mentoring.jpg', 'Wide photo; the text sits on top of it.'),
+        ],
+      },
       {
         title: 'Introduction',
         fields: [
@@ -438,40 +385,6 @@ export const PAGES = {
           p('support.text', 'Text', 'Our aim is to help individuals make informed career decisions and present their skills and experience with greater confidence.'),
         ],
       },
-      {
-        title: 'Approach (four steps)',
-        fields: [
-          t('approach.eyebrow', 'Small heading', 'Our Approach'),
-          t('approach.title', 'Heading', 'Your Goals. A Clearer Way Forward.'),
-          p('approach.text', 'Text', 'A structured, personalized approach to help you make informed career decisions.'),
-          ...items('step', 'Step', [
-            ['Understand Your Goals', 'We take the time to understand your aspirations, interests and current situation.'],
-            ['Identify Your Strengths', 'We help you recognize your strengths and the areas you want to develop.'],
-            ['Create a Personalized Plan', 'We build a practical action plan tailored to your goals.'],
-            ['Prepare for Your Next Step', 'We provide the guidance and support you need to move forward with confidence.'],
-          ], ['text', 'text']),
-        ],
-      },
-      {
-        title: 'Why choose Altiora',
-        fields: [
-          t('why.eyebrow', 'Small heading', 'Why Choose Altiora'),
-          t('why.title', 'Heading', 'Guidance That Goes Beyond the Next Job'),
-          p('why.text', 'Text', 'We combine practical expertise with a people-focused approach to help you make meaningful progress in your career journey.'),
-          t('why.item1', 'Checklist 1', 'Personalized guidance built around your goals'),
-          t('why.item2', 'Checklist 2', 'Support at every stage of your career'),
-          t('why.item3', 'Checklist 3', 'Practical help with CVs, profiles and interviews'),
-          t('why.item4', 'Checklist 4', 'A focus on informed decisions and greater confidence'),
-        ],
-      },
-      {
-        title: 'Closing banner',
-        fields: [
-          t('cta.title', 'Heading', "Let's Build Something Meaningful"),
-          p('cta.text', 'Text', 'Tell us what you are looking for, and our team will connect with you to discuss your requirements and explore the right way forward.'),
-          t('cta.button', 'Button label', 'Send Enquiry'),
-        ],
-      },
     ],
   },
 
@@ -486,16 +399,18 @@ export const PAGES = {
     },
     groups: [
       {
+        title: 'Pictures',
+        description: 'Change a picture with Change image. If you change nothing, the original photo stays.',
+        fields: [
+          img('banner.image', 'Banner photo', '/assets/img-contact.jpg', 'Wide photo behind the page title.'),
+        ],
+      },
+      {
         title: 'Page text',
         fields: [
-          t('banner.title', 'Page title', 'Contact Us'),
           t('intro.eyebrow', 'Small heading', 'Contact Us'),
           t('intro.title', 'Heading', 'Let’s Build Something Meaningful'),
           p('intro.text', 'Text', 'Whether you are looking to develop your workforce, strengthen professional capabilities, explore a customized training solution, or receive guidance for your career journey, we would be pleased to hear from you. Tell us what you are looking for, and our team will connect with you to discuss your requirements and explore the right way forward. Let’s start a conversation.'),
-          t('visit.title', 'Address box title', 'Visit Us'),
-          t('call.title', 'Phone box title', 'Call Us'),
-          t('email.title', 'Email box title', 'Email Us'),
-          t('whatsapp.button', 'WhatsApp button label', 'Chat on WhatsApp'),
         ],
       },
     ],
@@ -507,6 +422,15 @@ export const DEFAULTS = Object.fromEntries(
   Object.entries(PAGES).map(([page, def]) => [
     page,
     Object.fromEntries(def.groups.flatMap((g) => g.fields.map((f) => [f.key, f.default]))),
+  ])
+);
+
+// { page: Set of field keys that hold a picture }. A picture can never be empty (it falls back to the original photo),
+// but every text can: a text the admin clears and saves is empty on purpose, and the page hides it.
+export const IMAGE_KEYS = Object.fromEntries(
+  Object.entries(PAGES).map(([page, def]) => [
+    page,
+    new Set(def.groups.flatMap((g) => g.fields).filter((f) => f.type === 'image').map((f) => f.key)),
   ])
 );
 

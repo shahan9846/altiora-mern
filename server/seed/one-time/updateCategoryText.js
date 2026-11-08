@@ -3,8 +3,8 @@
 // programs, other categories and category names are left as they are.
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import Category from '../src/models/Category.js';
-import { CATEGORIES } from './categories.data.js';
+import Category from '../../src/models/Category.js';
+import { CATEGORIES } from '../categories.data.js';
 
 await mongoose.connect(process.env.MONGODB_URI);
 console.log(`Database: ${mongoose.connection.host}/${mongoose.connection.name}`);

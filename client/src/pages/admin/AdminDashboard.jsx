@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getStats } from '../../api/admin';
-
-export const fmtDate = (d) =>
-  new Date(d).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-export function StatusBadge({ status }) {
-  return <span className={'adm-badge ' + (status || 'new')}>{status || 'new'}</span>;
-}
+import { fmtDate, StatusBadge } from '../../components/admin/adminFormat';
 
 const I = (d) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{d}</svg>;
 const ICONS = {

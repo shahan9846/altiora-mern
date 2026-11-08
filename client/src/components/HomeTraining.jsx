@@ -34,7 +34,7 @@ function CountUp({ target, suffix = '' }) {
 // "13+ Ready Programs · 9 Categories · 100% Customizable", read from the database.
 export function TrainingStats({ labels }) {
   const categories = useCategories();
-  if (!categories) return <div className="mini-stats" style={{ minHeight: 96 }} />;
+  if (!categories) return <div className="mini-stats is-loading" />;
   const programs = categories.reduce((n, c) => n + c.programCount, 0);
 
   return (

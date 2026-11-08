@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getNotifications, saveNotifications, sendTestEmail } from '../../api/admin';
 import { useToast } from '../../components/admin/ToastProvider';
+import AdminPageHead from '../../components/admin/AdminPageHead';
 
 // Who receives the "new enquiry" emails, and a button to check that email works
 export default function AdminNotifications() {
@@ -51,13 +52,11 @@ export default function AdminNotifications() {
 
   return (
     <>
-      <div className="adm-page-head">
-        <div>
-          <span className="eyebrow">Settings</span>
-          <h1>Notifications</h1>
-          <p className="adm-head-text">Get an email as soon as someone sends the contact form or the consultation request. Replying to that email answers the visitor directly.</p>
-        </div>
-      </div>
+      <AdminPageHead
+        eyebrow="Settings"
+        title="Notifications"
+        text="Get an email as soon as someone sends the contact form or the consultation request. Replying to that email answers the visitor directly."
+      />
 
       {error && <div className="adm-alert" role="alert">{error}</div>}
       {!info && !error && <div className="adm-loading">Loading…</div>}
@@ -77,7 +76,7 @@ export default function AdminNotifications() {
           </div>
 
           <form onSubmit={save} className="adm-card adm-group">
-            <div className="adm-group-fields" style={{ gridTemplateColumns: '1fr' }}>
+            <div className="adm-group-fields one-column">
               <div className="adm-field">
                 <label htmlFor="notify-emails">Send new enquiries to <small>(one address, or several separated by commas, up to 5)</small></label>
                 <input

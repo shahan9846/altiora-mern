@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { z } from 'zod';
 import Category from '../models/Category.js';
 import Program from '../models/Program.js';
 import { requireAuth } from '../middleware/auth.js';
+import { validId, invalid } from '../middleware/validate.js';
 
 const router = Router();
 
@@ -12,12 +12,6 @@ const categorySchema = z.object({
   description: z.string().trim().max(600).optional().default(''),
   order: z.coerce.number().int().min(0).max(9999).optional(),
 });
-
-const validId = (req, res, next) =>
-  mongoose.isValidObjectId(req.params.id) ? next() : res.status(404).json({ message: 'Not found' });
-
-const invalid = (res, parsed) =>
-  res.status(400).json({ message: 'Please check the highlighted fields.', errors: parsed.error.flatten().fieldErrors });
 
 const duplicate = (res) => res.status(409).json({ message: 'A category with this name already exists.', errors: { name: ['Already exists'] } });
 

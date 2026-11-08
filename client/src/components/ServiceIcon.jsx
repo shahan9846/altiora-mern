@@ -15,18 +15,8 @@ const PATHS = {
   swap: <><path d="M4 8h13l-3-3" /><path d="M20 16H7l3 3" /></>,
 };
 
-export const ICON_OPTIONS = [
-  { key: 'building', label: 'Building' },
-  { key: 'book', label: 'Book' },
-  { key: 'people', label: 'People' },
-  { key: 'target', label: 'Target' },
-  { key: 'shield', label: 'Shield' },
-  { key: 'chart', label: 'Growth' },
-  { key: 'award', label: 'Award' },
-];
-
 // Every service card and service page shows this same icon (services no longer pick their own).
-export const SERVICE_ICON = 'building';
+const SERVICE_ICON = 'building';
 
 export default function ServiceIcon({ name = SERVICE_ICON }) {
   return (

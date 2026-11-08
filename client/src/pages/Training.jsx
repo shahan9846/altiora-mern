@@ -1,73 +1,66 @@
+// Training page.
+// All the wording comes from the dashboard (Pages -> Training); the programs come from Dashboard -> Training.
+// To change a text, see content/trainingContent.js and content/schema.js.
 import { Link } from 'react-router-dom';
 import { usePage, usePaths } from '../context/ContentContext';
+import { imageUrl } from '../api/client';
+import { getTrainingContent } from '../content/trainingContent';
+import PageBanner from '../components/PageBanner';
 import TrainingExplorer from '../components/TrainingExplorer';
-import Arrow from '../components/Arrow';
+import { icons } from '../components/icons';
 
 export default function Training() {
-  const c = usePage('training');
-  const path = usePaths();
+  const c = usePage('training'); // the text lookup for this page (also sets the page title and SEO tags)
+  const path = usePaths(); // web address of another page, e.g. path('contact')
+
+  const training = getTrainingContent(c);
 
   return (
     <>
-      <section className="page-banner page-banner-img">
-        <div className="page-banner-bg"><img src="/assets/img-training.jpg" alt="" /></div>
-        <div className="container">
-          <h1>{c('banner.title')}</h1>
-          <nav className="breadcrumb" aria-label="Breadcrumb">
-            <Link to="/">Home</Link>
-            <span className="sep">/</span>
-            <span className="current">{c('banner.title')}</span>
-          </nav>
-        </div>
-      </section>
+      {/* ============ BANNER ============ */}
+      <PageBanner image={training.banner.image} title={training.banner.title} />
 
-      {/* <section className="section-white" style={{ paddingBottom: '56px' }}>
-        <div className="container">
-          <div className="section-head reveal" style={{ maxWidth: '680px', marginBottom: '0' }}>
-            <span className="eyebrow">{c('intro.eyebrow')}</span>
-            <h2>{c('intro.title')}</h2>
-            <p>{c('intro.text')}</p>
-          </div>
-        </div>
-      </section> */}
-
+      {/* ============ TRAINING PROGRAMS ============ */}
       <section className="section-off">
         <div className="container">
           <div className="section-head section-head-wide reveal">
-            <span className="eyebrow">{c('areas.eyebrow')}</span>
-            <h2>{c('areas.title')}</h2>
-            <p>{c('areas.text')}</p>
+            {training.areas.smallHeading && <span className="eyebrow">{training.areas.smallHeading}</span>}
+            {training.areas.heading && <h2>{training.areas.heading}</h2>}
+            {training.areas.text && <p>{training.areas.text}</p>}
           </div>
           <TrainingExplorer />
         </div>
       </section>
 
+      {/* ============ CUSTOM TRAINING ============ */}
       <section className="section-white">
         <div className="container">
-          <div className="grid-2" style={{ alignItems: 'center' }}>
+          <div className="grid-2 align-center">
             <div className="editorial reveal">
-              <span className="eyebrow">{c('custom.eyebrow')}</span>
-              <h2 style={{ marginTop: '14px' }}>{c('custom.title')}</h2>
-              <p style={{ marginTop: '18px' }}>{c('custom.text')}</p>
-              <Link to={path('contact')} className="btn btn-outline-light" style={{ marginTop: '24px' }}>{c('custom.button')}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-              </Link>
+              {training.custom.smallHeading && <span className="eyebrow">{training.custom.smallHeading}</span>}
+              {training.custom.heading && <h2 className="mt-14">{training.custom.heading}</h2>}
+              {training.custom.text && <p className="mt-18">{training.custom.text}</p>}
+              {training.custom.button && (
+                <Link to={path('contact')} className="btn btn-outline-light mt-24">
+                  {training.custom.button}{icons.arrow}
+                </Link>
+              )}
             </div>
-            <div className="photo-frame reveal" style={{ aspectRatio: '4/3', borderColor: 'rgba(23,20,15,0.1)' }}>
-              <img src="/assets/img-training.jpg" alt="Altiora facilitator designing a bespoke training program" loading="lazy" />
+            <div className="photo-frame reveal photo-light ratio-4-3">
+              <img src={imageUrl(training.custom.image)} alt="Altiora facilitator designing a bespoke training program" loading="lazy" />
             </div>
           </div>
         </div>
       </section>
 
+      {/* ============ CALL TO ACTION ============ */}
       <section className="cta-band">
-        <div className="cta-bg"><img src="/assets/img-home-why.jpg" alt="" loading="lazy" /></div>
+        <div className="cta-bg"><img src={imageUrl(training.cta.image)} alt="" loading="lazy" /></div>
         <div className="container reveal">
-          <h2>{c('cta.title')}</h2>
-          <p>{c('cta.text')}</p>
+          <h2>{training.cta.heading}</h2>
+          <p>{training.cta.text}</p>
           <div className="cta-actions">
-            <a href="#training-explorer" className="btn btn-gold" onClick={(e) => { e.preventDefault(); document.getElementById('training-explorer')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>{c('cta.button1')} <Arrow /></a>
-            <Link to={path('contact')} className="btn btn-outline-light">{c('cta.button2')}</Link>
+            <Link to={path('contact')} className="btn btn-outline-light">{training.cta.button}</Link>
           </div>
         </div>
       </section>

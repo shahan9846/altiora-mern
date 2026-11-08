@@ -1,125 +1,111 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import useServices from '../hooks/useServices';
 import ServiceCard from './ServiceCard';
 
-// Home page "What We Do" row:
-// Combines continuous smooth auto-sliding (marquee/infinite loop) with interactive prev/next navigation buttons.
+// Home page "What We Do" row: the service cards slide by themselves, endlessly, with Previous / Next buttons.
 //
-// How it works:
-// - A repeated set of cards forms an infinite seamless loop.
-// - Auto-scrolls smoothly via requestAnimationFrame.
-// - Automatically pauses on mouse hover, touch, or keyboard focus.
-// - Arrow buttons smoothly scroll by one card width in either direction.
-// - When users click prev/next, auto-scrolling temporarily pauses and then resumes seamlessly.
+// How it works
+// - The list of cards is repeated, so the row can loop without a visible jump.
+// - Every frame the row is scrolled a tiny bit to the left (requestAnimationFrame).
+// - It stops while the mouse is over it or a finger touches it.
+// - The arrow buttons scroll by one card, and the automatic sliding waits a moment before it starts again.
 
-const MIN_CARDS_PER_HALF = 6;
-const AUTO_SPEED = 0.75; // pixels per frame (~45px per second)
+const MIN_CARDS_PER_HALF = 6; // how many cards one half of the loop holds, at least
+const AUTO_SPEED = 0.75; // pixels per frame (about 45 pixels per second)
+const RESUME_AFTER_MS = 2800; // how long the sliding waits after an arrow click
+const CARD_GAP = 24; // space between two cards, in pixels (must match the CSS)
+
+// One of the round Previous / Next buttons
+function ArrowButton({ direction, onClick }) {
+  const isPrev = direction < 0;
+  return (
+    <button type="button" className="slider-arrow" aria-label={isPrev ? 'Previous services' : 'Next services'} onClick={onClick}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d={isPrev ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'} />
+      </svg>
+    </button>
+  );
+}
 
 export default function ServicesSlider({ c }) {
   const services = useServices() || [];
   const viewportRef = useRef(null);
-  const trackRef = useRef(null);
-  const isHoveredRef = useRef(false);
-  const manualPauseTimerRef = useRef(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false); // true while the sliding is stopped
+  const resumeTimerRef = useRef(null);
 
-  // Duplicate services to ensure seamless wrapping
+  // Repeat the services so the loop has enough cards (the second half is a copy of the first)
   const repeats = services.length ? Math.max(2, Math.ceil(MIN_CARDS_PER_HALF / services.length)) : 2;
   const cardList = Array.from({ length: repeats * 2 }, () => services).flat();
 
+  // The automatic sliding
   useEffect(() => {
-    const el = viewportRef.current;
-    if (!el || services.length === 0) return;
+    const viewport = viewportRef.current;
+    if (!viewport || services.length === 0) return undefined;
 
-    let animId;
+    let animationId;
     let lastTime = performance.now();
 
     const step = (now) => {
-      const dt = Math.min(now - lastTime, 50); // cap delta time to prevent jumping on tab switch
+      const elapsed = Math.min(now - lastTime, 50); // capped so the row does not jump after switching tabs
       lastTime = now;
 
-      if (!isHoveredRef.current) {
-        // Auto-scroll forward
-        el.scrollLeft += (AUTO_SPEED * dt) / 16.67;
+      if (!isPausedRef.current) {
+        viewport.scrollLeft += (AUTO_SPEED * elapsed) / 16.67;
 
-        // Loop seamlessly halfway through the content
-        const maxScroll = el.scrollWidth / 2;
-        if (maxScroll > 0 && el.scrollLeft >= maxScroll) {
-          el.scrollLeft -= maxScroll;
-        } else if (el.scrollLeft <= 0) {
-          el.scrollLeft += maxScroll;
-        }
+        // Halfway through the cards the row looks the same as at the start, so jump back by half
+        const half = viewport.scrollWidth / 2;
+        if (half > 0 && viewport.scrollLeft >= half) viewport.scrollLeft -= half;
+        else if (viewport.scrollLeft <= 0) viewport.scrollLeft += half;
       }
 
-      animId = requestAnimationFrame(step);
+      animationId = requestAnimationFrame(step);
     };
 
-    animId = requestAnimationFrame(step);
-
+    animationId = requestAnimationFrame(step);
     return () => {
-      cancelAnimationFrame(animId);
-      if (manualPauseTimerRef.current) clearTimeout(manualPauseTimerRef.current);
+      cancelAnimationFrame(animationId);
+      clearTimeout(resumeTimerRef.current);
     };
   }, [services.length]);
 
+  const pause = () => { isPausedRef.current = true; };
+  const resume = () => { isPausedRef.current = false; };
+
+  // Stop now, start again a moment later
   const pauseBriefly = () => {
-    isHoveredRef.current = true;
-    setIsPaused(true);
-    if (manualPauseTimerRef.current) clearTimeout(manualPauseTimerRef.current);
-    manualPauseTimerRef.current = setTimeout(() => {
-      isHoveredRef.current = false;
-      setIsPaused(false);
-    }, 2800);
+    pause();
+    clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(resume, RESUME_AFTER_MS);
   };
 
-  const scrollByAmount = (direction) => {
-    const el = viewportRef.current;
-    if (!el) return;
+  // direction: -1 = one card back, 1 = one card forward
+  const scrollByCard = (direction) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
 
-    const card = el.querySelector('.service-card-img');
-    const stepAmount = card ? card.getBoundingClientRect().width + 24 : 384;
-    const maxScroll = el.scrollWidth / 2;
+    const card = viewport.querySelector('.service-card-img');
+    const distance = card ? card.getBoundingClientRect().width + CARD_GAP : 384;
+    const half = viewport.scrollWidth / 2;
 
-    // Check wrapping boundaries before/after scrolling
-    if (direction < 0 && el.scrollLeft <= 5) {
-      el.scrollLeft += maxScroll;
-    } else if (direction > 0 && el.scrollLeft >= maxScroll - 5) {
-      el.scrollLeft -= maxScroll;
-    }
+    // At the very start or end of the loop, jump to the matching spot in the other half first
+    if (direction < 0 && viewport.scrollLeft <= 5) viewport.scrollLeft += half;
+    else if (direction > 0 && viewport.scrollLeft >= half - 5) viewport.scrollLeft -= half;
 
-    el.scrollBy({ left: direction * stepAmount, behavior: 'smooth' });
+    viewport.scrollBy({ left: direction * distance, behavior: 'smooth' });
     pauseBriefly();
   };
 
   return (
     <>
-      <div className="section-head reveal flex-between" style={{ alignItems: 'flex-end', marginBottom: 36, maxWidth: 'none', flexWrap: 'nowrap' }}>
-        <div style={{ marginBottom: 0, maxWidth: 640 }}>
-          <span className="eyebrow">{c('services.eyebrow')}</span>
-          <h2>{c('services.title')}</h2>
-          <p>{c('services.text')}</p>
+      <div className="section-head reveal flex-between services-slider-head">
+        <div className="services-slider-text">
+          {c('services.eyebrow') && <span className="eyebrow">{c('services.eyebrow')}</span>}
+          {c('services.title') && <h2>{c('services.title')}</h2>}
+          {c('services.text') && <p>{c('services.text')}</p>}
         </div>
         <div className="slider-controls">
-          <button
-            type="button"
-            className="slider-arrow"
-            aria-label="Previous services"
-            onClick={() => scrollByAmount(-1)}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M15 6l-6 6 6 6" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="slider-arrow"
-            aria-label="Next services"
-            onClick={() => scrollByAmount(1)}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
+          <ArrowButton direction={-1} onClick={() => scrollByCard(-1)} />
+          <ArrowButton direction={1} onClick={() => scrollByCard(1)} />
         </div>
       </div>
 
@@ -128,25 +114,14 @@ export default function ServicesSlider({ c }) {
           className="services-auto-slider"
           id="services-viewport"
           ref={viewportRef}
-          onMouseEnter={() => {
-            isHoveredRef.current = true;
-            setIsPaused(true);
-          }}
-          onMouseLeave={() => {
-            isHoveredRef.current = false;
-            setIsPaused(false);
-          }}
-          onTouchStart={() => {
-            isHoveredRef.current = true;
-            setIsPaused(true);
-          }}
-          onTouchEnd={() => {
-            pauseBriefly();
-          }}
+          onMouseEnter={pause}
+          onMouseLeave={resume}
+          onTouchStart={pause}
+          onTouchEnd={pauseBriefly}
         >
-          <div className="services-auto-track" ref={trackRef}>
-            {cardList.map((s, i) => (
-              <ServiceCard key={s.slug + '-' + i} service={s} />
+          <div className="services-auto-track">
+            {cardList.map((service, index) => (
+              <ServiceCard key={service.slug + '-' + index} service={service} />
             ))}
           </div>
         </div>

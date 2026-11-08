@@ -3,7 +3,9 @@ import { useConfirm } from '../../components/admin/ConfirmProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { deleteEnquiry, listEnquiries, setEnquiryStatus } from '../../api/admin';
 import AdminModal from '../../components/admin/AdminModal';
-import { fmtDate, StatusBadge } from './AdminDashboard';
+import AdminPageHead from '../../components/admin/AdminPageHead';
+import AdminTable from '../../components/admin/AdminTable';
+import { fmtDate, StatusBadge } from '../../components/admin/adminFormat';
 
 const STATUSES = ['new', 'contacted', 'closed'];
 
@@ -56,13 +58,11 @@ export default function AdminEnquiries() {
 
   return (
     <>
-      <div className="adm-page-head">
-        <div>
-          <span className="eyebrow">Inbox</span>
-          <h1>Enquiries</h1>
-          <p className="adm-head-text">Messages from your contact form and consultation requests. Open one to reply and mark how far you have got.</p>
-        </div>
-      </div>
+      <AdminPageHead
+        eyebrow="Inbox"
+        title="Enquiries"
+        text="Messages from your contact form and consultation requests. Open one to reply and mark how far you have got."
+      />
 
       {error && <div className="adm-alert" role="alert">{error}</div>}
 
@@ -77,38 +77,29 @@ export default function AdminEnquiries() {
         <input type="search" className="adm-search" placeholder="Search name, email, company, message…" value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
 
-      <div className="adm-card adm-table-wrap">
-        {!rows ? (
-          <div className="adm-loading">Loading…</div>
-        ) : visible.length === 0 ? (
-          <p className="adm-empty">{rows.length ? 'No enquiries match your filters.' : 'No enquiries yet — they will appear here when someone submits a form on the website.'}</p>
-        ) : (
-          <table className="adm-table">
-            <thead>
-              <tr><th>Received</th><th>Name</th><th>Contact</th><th>Interest</th><th>Status</th><th></th></tr>
-            </thead>
-            <tbody>
-              {visible.map((r) => (
-                <tr key={r._id} className={(r.status || 'new') === 'new' ? 'is-new' : ''}>
-                  <td className="nowrap">{fmtDate(r.createdAt)}</td>
-                  <td><strong>{r.name}</strong>{r.company && <small>{r.company}</small>}</td>
-                  <td><span>{r.email}</span><small>{r.phone}</small></td>
-                  <td>{r.service || r.subject || <em className="adm-muted">Consultation</em>}</td>
-                  <td>
-                    <select className="adm-select" value={r.status || 'new'} onChange={(e) => changeStatus(r, e.target.value)} aria-label="Status">
-                      {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </td>
-                  <td className="adm-actions">
-                    <button type="button" className="adm-btn-sm" onClick={() => setSelected(r)}>View</button>
-                    <button type="button" className="adm-btn-sm danger" onClick={() => remove(r)}>Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <AdminTable
+        rows={rows}
+        items={visible}
+        columns={['Received', 'Name', 'Contact', 'Interest', 'Status', '']}
+        empty={rows?.length ? 'No enquiries match your filters.' : 'No enquiries yet — they will appear here when someone submits a form on the website.'}
+        renderRow={(r) => (
+          <tr key={r._id} className={(r.status || 'new') === 'new' ? 'is-new' : ''}>
+            <td className="nowrap">{fmtDate(r.createdAt)}</td>
+            <td><strong>{r.name}</strong>{r.company && <small>{r.company}</small>}</td>
+            <td><span>{r.email}</span><small>{r.phone}</small></td>
+            <td>{r.service || r.subject || <em className="adm-muted">Consultation</em>}</td>
+            <td>
+              <select className="adm-select" value={r.status || 'new'} onChange={(e) => changeStatus(r, e.target.value)} aria-label="Status">
+                {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </td>
+            <td className="adm-actions">
+              <button type="button" className="adm-btn-sm" onClick={() => setSelected(r)}>View</button>
+              <button type="button" className="adm-btn-sm danger" onClick={() => remove(r)}>Delete</button>
+            </td>
+          </tr>
         )}
-      </div>
+      />
 
       {selected && (
         <AdminModal title="Enquiry details" onClose={() => setSelected(null)}>
