@@ -49,7 +49,7 @@ export default function EnquiryForm() {
     }
     setSending(true);
     try {
-      await submitEnquiry({ ...values, source: 'contact' });
+      await submitEnquiry({ ...values, source: 'contact' }, () => setStatus({ type: 'info', text: 'Still sending… our server is waking up, this can take up to a minute. Please keep this page open.' }));
       setValues({ name: '', company: '', email: '', phone: '', service: '', message: '' });
       setErrors({});
       setStatus(null);
